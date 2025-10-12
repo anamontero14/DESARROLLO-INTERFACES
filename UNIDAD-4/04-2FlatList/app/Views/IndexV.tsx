@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Pressable, Alert } from "react-native";
 import { IndexVM } from "../ViewModels/IndexVM";
 import { Persona } from "../Models/Entities/PersonaModel";
 
@@ -16,10 +16,9 @@ export default function Index() {
         data={personas}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
+          <Pressable onPress={() => Alert.alert(`Usuario: ${item.id} | ${item.nombre} ${item.apellido}`)} style={styles.itemContainer}>
             <Text style={styles.nameText}>{item.nombre} {item.apellido}</Text>
-            <Text style={styles.idText}>ID: {item.id}</Text>
-          </View>
+          </Pressable>
         )}
       />
     </View>
