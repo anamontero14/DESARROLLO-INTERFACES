@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, Pressable, Alert } from "react-native";
+import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 import { IndexVM } from "../ViewModels/IndexVM";
 import { Persona } from "../Models/Entities/PersonaModel";
 
-const vm = new IndexVM();
-const personas: Persona[] = vm.getPersonas();
-
 export default function Index() {
+
+  const vm = new IndexVM();
+  const personas: Persona[] = vm.Personas;
+
   return (
     <View style={styles.container}>
       <View style={styles.titulo}>
@@ -16,11 +17,14 @@ export default function Index() {
         data={personas}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Pressable onPress={() => Alert.alert(`Usuario: ${item.id} | ${item.nombre} ${item.apellido}`)} style={styles.itemContainer}>
+          <Pressable onPress={() => vm.personaSeleccionada = item} style={styles.itemContainer}>
             <Text style={styles.nameText}>{item.nombre} {item.apellido}</Text>
           </Pressable>
         )}
       />
+      <View>
+        <Text>Persona seleccionada: {vm.personaSeleccionada?.nombre}</Text>
+      </View>
     </View>
   );
 }
