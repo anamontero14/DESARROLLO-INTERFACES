@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 import { IndexVM } from "../ViewModels/IndexVM";
 import { Persona } from "../Models/Entities/PersonaModel";
+import { useReactIndexVMAdapter } from "../Hooks/ReactIndexVMAdapter";
 
 export default function Index() {
 
   const vm = new IndexVM();
   const personas: Persona[] = vm.Personas;
+  const { personaSeleccionada } = useReactIndexVMAdapter(vm);
 
   return (
     <View style={styles.container}>
@@ -22,8 +24,9 @@ export default function Index() {
           </Pressable>
         )}
       />
-      <View>
-        <Text>Persona seleccionada: {vm.personaSeleccionada?.nombre}</Text>
+
+      <View style={styles.selectedTextContainer}>
+        <Text style={styles.selectedText}>Persona seleccionada: {personaSeleccionada?.nombre ?? "Ninguna"}</Text>
       </View>
     </View>
   );
@@ -31,6 +34,27 @@ export default function Index() {
 
 //#region Styles
 const styles = StyleSheet.create({
+
+  selectedTextContainer: {
+  marginTop: 20,
+  alignItems: "center",
+  backgroundColor: "#ffffff",
+  paddingVertical: 12,
+  paddingHorizontal: 20,
+  borderRadius: 12,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.1,
+  shadowRadius: 5,
+  elevation: 4, // sombra en Android
+  },
+
+  selectedText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2E7D32", // verde suave
+  },
+
  container: {
     flex: 1,
     backgroundColor: "#c3e9d3ff", // fondo suave
