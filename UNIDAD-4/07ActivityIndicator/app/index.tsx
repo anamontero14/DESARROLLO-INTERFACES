@@ -17,17 +17,16 @@ export default function Index() {
   const manejarRecarga = () => {
     setCargando(true)
     setCargado(false)
+    /*Set timeout lo que nos permite es crear una funcion
+    la cual se ejecutará en el tiempo que nosotros le indiquemos.
+    Por ejemplo en este caso setTimeout lo que hace es
+    actualizar las variables a sus valores correspondientes
+    después de que pase cierto tiempo indicado en milisegundos*/
+    setTimeout(() => {
+      setCargando(false)
+      setCargado(true)
+    }, 2000);
   }
-
-  /*Set timeout lo que nos permite es crear una funcion
-  la cual se ejecutará en el tiempo que nosotros le indiquemos.
-  Por ejemplo en este caso setTimeout lo que hace es
-  actualizar las variables a sus valores correspondientes
-  después de que pase cierto tiempo indicado en milisegundos*/
-  setTimeout(() => {
-    setCargando(false)
-    setCargado(true)
-  }, 2000);
 
   return (
     <View
@@ -40,9 +39,11 @@ export default function Index() {
       <Pressable onPress={manejarRecarga}>
         <Ionicons name="reload" size={24} color="blue" />
       </Pressable>
+
       {cargando && <ActivityIndicator size="large" color="blue" />}
 
       {cargado && <Text>Cargado con éxito</Text>}
+
     </View>
   );
 }
