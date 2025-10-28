@@ -13,7 +13,15 @@ export class GetPeopleListUseCase {
 
     // El método 'execute' es la función principal del Caso de Uso.
     execute(): Persona[] {
-        // La lógica de negocio es simplemente obtener la lista a través del repositorio.
+        // La lógica de negocio es obtener las personas a la hora indicada.
+
+        const hora = new Date().getHours();
+        
+        
+
+        if (hora < 12) {
+            
+        }
         return this.repositoryPersonas.getListadoCompletoPersonas();
     }
 }

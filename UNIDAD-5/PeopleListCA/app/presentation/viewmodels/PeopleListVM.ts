@@ -14,7 +14,7 @@ export class PeopleListVM {
 
     // Ahora inyectamos el Caso de Uso, no el Repositorio.
     constructor(@inject(TYPES.GetPeopleListUseCase) private getPeopleListUseCase: GetPeopleListUseCase) {
-        this._personaSeleccionada = new Persona(0, '', '');
+        this._personaSeleccionada = new Persona(0, '', '', 0);
         
         // El ViewModel llama al Caso de Uso para obtener los datos.
         this._personasList = this.getPeopleListUseCase.execute(); 
