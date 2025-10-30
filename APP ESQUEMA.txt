@@ -1,0 +1,51 @@
+APP/
+	DOMAIN/
+		ENTITIES/
+			Persona.ts
+				- number _id
+				- string _nombre
+				- string _apellido
+				- number _edad
+				+ getters/setters
+		USECASES/
+			UseCasePersonaMayorEdad.ts : IRepositoryPersonaUseCase.ts (INJECTION -> IRepositoryPersona)
+			- ComprobarMayoríaEdad
+			+ GetListPersona List<Persona>
+		INTERFACES (USE CASES)
+			IRepositoryPersonaUseCase.ts (INTERFAZ)
+			+ GetListPersonas List<Persona>
+		REPOSITORIES (INTERFACES)/
+			IRepositoryPersona.ts (INTERFAZ) 
+			+ GetListPersonas List<Persona>
+			
+	DATA/
+		REPOSITORIES/
+			RepositoryPersonas.ts : IRepositoryPersona.ts
+			- ListaPersonas List<Persona>
+			+ GetListadoPersonas() List<Persona>			
+
+			RepositoryPersonas100.ts : IRepositoryPersona.ts
+			- ListaPersonas List<Persona>
+			+ GetListadoPersonas() List<Persona>
+			
+			RepositoryPersonasEmpty.ts : IRepositoryPersona.ts
+			- ListaPersonas List<Persona>
+			+ GetListadoPersonas() List<Persona>
+	UI/
+		VIEWMODELS/
+			ListadoPersonasVM.ts (INJECTION -> IRepositoryPersona)
+			+ GetListadoPersonas List<Persona>
+		VIEWS/
+			ListadoPersonasV.tsx
+			index.tsx
+		HOOKS/
+			UsePersonaLista.ts
+		MODELS/	
+			(en caso de que la vista necesite un modelo específico como por ejemplo que una persona tuviera como 
+			atributo un id del departamento pero que en la vista tuvieramos que mostrar
+			una persona junto con el nombre del departamento. En ese caso necesitaríamos crear un
+			modelo que permitiera crear una persona junto con el nombre del departamento el cual se le
+			pasaría al view model para que este hiciera un listado de personas con nombres de departamentos)
+	CORE/
+		types.ts
+		container.ts

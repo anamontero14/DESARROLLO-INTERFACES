@@ -5,5 +5,6 @@ import { Persona } from "../ENTITIES/Persona";
  * una lista de personas
  */
 export interface IRepositoryPersonas {
+    for(): Persona[];
     GetListPersonas(): Persona[];
 }

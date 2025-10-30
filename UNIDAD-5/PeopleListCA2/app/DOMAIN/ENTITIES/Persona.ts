@@ -2,7 +2,7 @@
  * Clase que contendrá la definición de una persona y
  * los atributos que deberá tener
  */
-class Persona {
+export class Persona {
 
     //#region ATRIBUTOS PRIVADOS
     private _id: number
