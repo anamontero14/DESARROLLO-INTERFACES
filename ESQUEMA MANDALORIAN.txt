@@ -1,0 +1,49 @@
+UI/
+	VIEWS/
+		Index.cshtml:
+			se muestra una lista de personas
+	MODELS/
+		IndexVM.cs:
+			- List<Mision> listadoMisiones
+			- Mision misionSeleccionada
+			
+	CONTROLLER/
+		IAction Index() -> INYECCION CASO DE USO
+		try catch
+			return View()
+		[HTTP]
+		IAction Index(Mision misionSeleccionada)
+			return View()
+		
+	Program.cs -> referencia a CONTAINER
+DOMAIN/
+	INTERFACES-REPOSITORY/
+		IRepositoryMisiones.cs
+			+ getListaMisiones()
+	ENTITIES/
+		Mision.cs
+		- int _id
+		- string _nombre
+		- string _descripion
+		- int recompensa
+
+		+ Misiones()
+		+ Misiones(string nombre, string descripción, int recompensa)
+		
+		+ GETTERS Y SETTERS
+	USE-CASES/
+		ListadoMisionesUseCase.cs : IUseCaseMisiones.cs (INYECTAR IRepositoryMisiones)
+			+ getListaMisionesFiltradas() -> No puede verlas después de las media noche y se manda un throw con una excepcion
+			  raiseException
+			+ getMisionPorID()
+		INTERFACES/
+			IUseCaseListadoMisiones.cs
+				+ getListaMisionesFiltradas()
+				+ getMisionPorID()
+DATA/
+	REPOSITORIES/
+		RepositoryMisiones.cs : IRepositoryMisiones.cs
+			+ getListaMisiones()
+CONTAINER/
+	DI.cs
+		REFERENCIAS DE INYECCIONES
