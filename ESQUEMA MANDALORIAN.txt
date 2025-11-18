@@ -17,9 +17,24 @@ UI/
 		
 	Program.cs -> referencia a CONTAINER
 DOMAIN/
-	INTERFACES-REPOSITORY/
+	DTO/
+		ListadoConMision.cs : IDtoListaConMision -> INYECTA(IUseCaseMisiones)
+		- List<Mision> listaMisiones { get; set}
+		- Mision misionSeleccionada { get; set}
+		
+		+ ListadoConMision(List<Mision> listaMisiones, Mision misionSeleccionada)
+		+ ListadoConMision()
+	
+	INTERFACES/
 		IRepositoryMisiones.cs
 			+ getListaMisiones()
+
+		IUseCaseListadoMisiones.cs
+			+ getListaMisionesFiltradas()
+			+ getMisionPorID()
+		
+		IDtoListaConMision.cs
+			+ getListaMisionesMisionSeleccionada()
 	ENTITIES/
 		Mision.cs
 		- int _id
@@ -36,10 +51,6 @@ DOMAIN/
 			+ getListaMisionesFiltradas() -> No puede verlas después de las media noche y se manda un throw con una excepcion
 			  raiseException
 			+ getMisionPorID()
-		INTERFACES/
-			IUseCaseListadoMisiones.cs
-				+ getListaMisionesFiltradas()
-				+ getMisionPorID()
 DATA/
 	REPOSITORIES/
 		RepositoryMisiones.cs : IRepositoryMisiones.cs
