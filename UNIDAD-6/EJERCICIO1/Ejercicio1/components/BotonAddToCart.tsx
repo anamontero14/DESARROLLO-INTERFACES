@@ -14,16 +14,20 @@ export function BotonAddToCart({ text, onClick }: Props) {
     );
 }
 
-const style = StyleSheet.create ({
-    container : {
-        padding: 10,
+const style = StyleSheet.create({
+    container: {
+        paddingVertical: 12,
+        paddingHorizontal: 20,
         borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#5aa2fa'
+        backgroundColor: '#5aa2fa',
+        width: '90%', // ocupa casi todo el ancho de la tarjeta
+        marginTop: 10,
     },
-    texto : {
+    texto: {
         color: '#fff',
-        fontWeight: 'bold'
-    }
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
 });
