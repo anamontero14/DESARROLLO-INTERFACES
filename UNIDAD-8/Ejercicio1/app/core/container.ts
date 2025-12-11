@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { IRepositoryPersonas, PersonasRepository } from "../data/repositories/PersonaRepository";
 import { TYPES } from "./types";
 import { IUseCasePersonas } from "../domain/interfaces/usecase/IUseCasePersonas";
-import { UseCasePersonas } from "../domain/usecases/UseCasePersonas";
+import { UseCasePersonas } from "../domain/usecases/UseCasePersona";
 import { PeopleListVM } from "../ui/viewmodels/PeopleListVM";
 
 const container = new Container();
