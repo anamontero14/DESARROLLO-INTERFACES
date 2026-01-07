@@ -1,5 +1,6 @@
 // src/presenter/models/PersonaConListaDepartamentosYColor.ts
 
+import { makeAutoObservable } from "mobx";
 import { Departamento } from "../../domain/entities/Departamento";
 
 /**
@@ -27,6 +28,9 @@ export class PersonaConListaDepartamentosYColor {
         this._listadoDepartamentos = listadoDepartamentos;
         this._idDepartamentoGuess = idDepartamentoGuess;
         this._color = color;
+        
+        // Hacer esta instancia observable
+        makeAutoObservable(this);
     }
     //#endregion
 

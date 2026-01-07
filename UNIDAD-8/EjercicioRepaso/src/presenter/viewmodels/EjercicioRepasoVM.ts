@@ -72,7 +72,7 @@ export class EjercicioRepasoVM {
             const personasConColor: PersonaConListaDepartamentosYColor[] = [];
 
             for (const personaDTO of personasDTO) {
-                const idDepartamento = this.obtenerIdDepartamentoReal(personaDTO);
+                const idDepartamento = personaDTO.idDepartamentoReal; // ← CAMBIADO: Usar el ID real
                 const color = colores[idDepartamento] || "#FFFFFF";
                 
                 const personaConColor = new PersonaConListaDepartamentosYColor(
@@ -150,7 +150,7 @@ export class EjercicioRepasoVM {
         let indiceColor = 0;
 
         for (const persona of personas) {
-            const idDepartamento = this.obtenerIdDepartamentoReal(persona);
+            const idDepartamento = persona.idDepartamentoReal; // ← CAMBIADO: Usar el ID real
             
             if (!colores[idDepartamento]) {
                 colores[idDepartamento] = coloresDisponibles[indiceColor % coloresDisponibles.length];
@@ -159,13 +159,6 @@ export class EjercicioRepasoVM {
         }
 
         return colores;
-    }
-
-    /**
-     * Obtiene el ID del departamento real de una persona
-     */
-    private obtenerIdDepartamentoReal(persona: PersonaConListaDepartamentos): number {
-        return persona.listadoDepartamentos[0]?.id || 0;
     }
 
     /**
@@ -179,6 +172,7 @@ export class EjercicioRepasoVM {
                 persona.nombrePersona,
                 persona.apellidosPersona,
                 persona.listadoDepartamentos,
+                0, // ← El ID real no importa aquí, solo necesitamos el guess
                 persona.idDepartamentoGuess
             );
             dtos.push(dto);

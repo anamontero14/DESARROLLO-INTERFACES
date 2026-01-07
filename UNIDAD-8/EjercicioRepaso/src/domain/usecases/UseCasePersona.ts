@@ -37,6 +37,7 @@ export class UseCasePersona implements IUseCasePersona {
                 persona.nombre,
                 persona.apellidos,
                 departamentos,
+                persona.idDepartamento, // ← CAMBIADO: Pasar el ID real del departamento
                 0
             );
             listaPersonasConDepartamentos.push(personaConDepartamentos);

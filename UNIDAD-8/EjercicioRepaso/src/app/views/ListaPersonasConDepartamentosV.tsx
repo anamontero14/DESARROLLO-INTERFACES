@@ -1,9 +1,8 @@
 // src/app/views/ListaPersonasConDepartamentosV.tsx
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { Picker } from '@react-native-picker/picker';
 import { container } from '../../core/container';
 import { TYPES } from '../../core/types';
 import { EjercicioRepasoVM } from '../../presenter/viewmodels/EjercicioRepasoVM';
@@ -15,6 +14,10 @@ const ListaPersonasConDepartamentosV = observer(() => {
     const [viewModel] = useState<EjercicioRepasoVM>(() => 
         container.get<EjercicioRepasoVM>(TYPES.EjercicioRepasoVM)
     );
+    
+    const [modalVisible, setModalVisible] = useState(false);
+    const [personaSeleccionadaIndex, setPersonaSeleccionadaIndex] = useState<number | null>(null);
+    const [mostrarResultados, setMostrarResultados] = useState(false);
 
     useEffect(() => {
         cargarDatosIniciales();
@@ -28,15 +31,12 @@ const ListaPersonasConDepartamentosV = observer(() => {
         const todasSeleccionadas = validarTodasSeleccionadas();
         
         if (!todasSeleccionadas) {
-            Alert.alert(
-                'Advertencia',
-                'Debes seleccionar un departamento para todas las personas antes de comprobar.'
-            );
+            alert('Debes seleccionar un departamento para todas las personas antes de comprobar.');
             return;
         }
 
         await viewModel.comprobarRespuestas();
-        mostrarResultado();
+        setMostrarResultados(true);
     };
 
     const validarTodasSeleccionadas = (): boolean => {
@@ -51,24 +51,30 @@ const ListaPersonasConDepartamentosV = observer(() => {
         return resultado;
     };
 
-    const mostrarResultado = (): void => {
-        if (viewModel.hasGanado) {
-            Alert.alert(
-                '¡Enhorabuena! 🎉',
-                '¡Has acertado todos los departamentos! ¡Eres un experto!',
-                [{ text: 'Jugar de nuevo', onPress: handleReiniciar }]
-            );
-            return;
-        }
-
-        Alert.alert(
-            'Resultado',
-            `Has acertado ${viewModel.aciertos} de ${viewModel.personasConDepartamentosList.length} departamentos. ¡Sigue intentándolo!`
-        );
-    };
-
     const handleReiniciar = (): void => {
         viewModel.reiniciarJuego();
+        setMostrarResultados(false);
+    };
+
+    const abrirSelector = (index: number): void => {
+        setPersonaSeleccionadaIndex(index);
+        setModalVisible(true);
+    };
+
+    const seleccionarDepartamento = (idDepartamento: number): void => {
+        if (personaSeleccionadaIndex !== null) {
+            viewModel.actualizarSeleccionDepartamento(personaSeleccionadaIndex, idDepartamento);
+        }
+        setModalVisible(false);
+        setPersonaSeleccionadaIndex(null);
+    };
+
+    const obtenerNombreDepartamento = (idDepartamento: number, listaDepartamentos: any[]): string => {
+        if (idDepartamento === 0) {
+            return "Selecciona un departamento...";
+        }
+        const departamento = listaDepartamentos.find(d => d.id === idDepartamento);
+        return departamento ? departamento.nombre : "Selecciona un departamento...";
     };
 
     const renderPersonaItem = ({ item, index }: { item: any; index: number }) => {
@@ -80,22 +86,18 @@ const ListaPersonasConDepartamentosV = observer(() => {
                     </Text>
                 </View>
                 
-                <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={item.idDepartamentoGuess}
-                        style={styles.picker}
-                        onValueChange={(value) => viewModel.actualizarSeleccionDepartamento(index, value)}
-                    >
-                        <Picker.Item label="Selecciona un departamento..." value={0} />
-                        {item.listadoDepartamentos.map((dept: any) => (
-                            <Picker.Item 
-                                key={dept.id} 
-                                label={dept.nombre} 
-                                value={dept.id} 
-                            />
-                        ))}
-                    </Picker>
-                </View>
+                <TouchableOpacity 
+                    style={styles.selectorContainer}
+                    onPress={() => abrirSelector(index)}
+                >
+                    <Text style={[
+                        styles.selectorText,
+                        item.idDepartamentoGuess === 0 && styles.selectorPlaceholder
+                    ]}>
+                        {obtenerNombreDepartamento(item.idDepartamentoGuess, item.listadoDepartamentos)}
+                    </Text>
+                    <Text style={styles.selectorArrow}>▼</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -120,6 +122,10 @@ const ListaPersonasConDepartamentosV = observer(() => {
         );
     }
 
+    const personaActual = personaSeleccionadaIndex !== null 
+        ? viewModel.personasConDepartamentosList[personaSeleccionadaIndex] 
+        : null;
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -128,6 +134,27 @@ const ListaPersonasConDepartamentosV = observer(() => {
                     Las personas del mismo departamento tienen el mismo color
                 </Text>
             </View>
+
+            {/* Mostrar resultados si ya se comprobó */}
+            {mostrarResultados && viewModel.aciertos !== null && (
+                <View style={[
+                    styles.resultadoContainer,
+                    viewModel.hasGanado ? styles.resultadoGanado : styles.resultadoIntento
+                ]}>
+                    <Text style={styles.resultadoEmoji}>
+                        {viewModel.hasGanado ? '🎉' : '📊'}
+                    </Text>
+                    <Text style={styles.resultadoTitulo}>
+                        {viewModel.hasGanado ? '¡Enhorabuena!' : 'Resultado'}
+                    </Text>
+                    <Text style={styles.resultadoTexto}>
+                        {viewModel.hasGanado 
+                            ? '¡Has acertado todos los departamentos! ¡Eres un experto!'
+                            : `Has acertado ${viewModel.aciertos} de ${viewModel.personasConDepartamentosList.length} departamentos. ¡Sigue intentándolo!`
+                        }
+                    </Text>
+                </View>
+            )}
 
             <FlatList
                 data={viewModel.personasConDepartamentosList}
@@ -158,6 +185,51 @@ const ListaPersonasConDepartamentosV = observer(() => {
                     </TouchableOpacity>
                 )}
             </View>
+
+            {/* Modal para seleccionar departamento */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Selecciona un departamento</Text>
+                            <TouchableOpacity 
+                                onPress={() => setModalVisible(false)}
+                                style={styles.closeButton}
+                            >
+                                <Text style={styles.closeButtonText}>✕</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
+                        <ScrollView style={styles.modalScrollView}>
+                            {personaActual?.listadoDepartamentos.map((dept: any) => (
+                                <TouchableOpacity
+                                    key={dept.id}
+                                    style={[
+                                        styles.departamentoOption,
+                                        personaActual.idDepartamentoGuess === dept.id && styles.departamentoOptionSelected
+                                    ]}
+                                    onPress={() => seleccionarDepartamento(dept.id)}
+                                >
+                                    <Text style={[
+                                        styles.departamentoOptionText,
+                                        personaActual.idDepartamentoGuess === dept.id && styles.departamentoOptionTextSelected
+                                    ]}>
+                                        {dept.nombre}
+                                    </Text>
+                                    {personaActual.idDepartamentoGuess === dept.id && (
+                                        <Text style={styles.checkMark}>✓</Text>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 });
@@ -189,6 +261,42 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         opacity: 0.9,
     },
+    resultadoContainer: {
+        margin: 16,
+        padding: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    resultadoGanado: {
+        backgroundColor: '#D4EDDA',
+        borderWidth: 2,
+        borderColor: '#28A745',
+    },
+    resultadoIntento: {
+        backgroundColor: '#FFF3CD',
+        borderWidth: 2,
+        borderColor: '#FFC107',
+    },
+    resultadoEmoji: {
+        fontSize: 48,
+        marginBottom: 8,
+    },
+    resultadoTitulo: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 8,
+    },
+    resultadoTexto: {
+        fontSize: 16,
+        color: '#666',
+        textAlign: 'center',
+    },
     listContainer: {
         padding: 16,
     },
@@ -210,14 +318,28 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#333',
     },
-    pickerContainer: {
+    selectorContainer: {
         backgroundColor: '#FFFFFF',
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#DDD',
+        padding: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    picker: {
-        height: 50,
+    selectorText: {
+        fontSize: 16,
+        color: '#333',
+        flex: 1,
+    },
+    selectorPlaceholder: {
+        color: '#999',
+    },
+    selectorArrow: {
+        fontSize: 12,
+        color: '#666',
+        marginLeft: 8,
     },
     buttonContainer: {
         padding: 16,
@@ -264,6 +386,69 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: '600',
+    },
+    // Estilos del Modal
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    modalContainer: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        width: '100%',
+        maxWidth: 400,
+        maxHeight: '80%',
+        overflow: 'hidden',
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E0E0E0',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    closeButtonText: {
+        fontSize: 24,
+        color: '#666',
+    },
+    modalScrollView: {
+        maxHeight: 400,
+    },
+    departamentoOption: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    departamentoOptionSelected: {
+        backgroundColor: '#E5F5FF',
+    },
+    departamentoOptionText: {
+        fontSize: 16,
+        color: '#333',
+    },
+    departamentoOptionTextSelected: {
+        color: '#007AFF',
+        fontWeight: '600',
+    },
+    checkMark: {
+        fontSize: 20,
+        color: '#007AFF',
+        fontWeight: 'bold',
     },
 });
 

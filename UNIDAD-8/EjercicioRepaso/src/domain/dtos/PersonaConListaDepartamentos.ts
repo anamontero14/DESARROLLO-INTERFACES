@@ -11,6 +11,7 @@ export class PersonaConListaDepartamentos {
     private _apellidosPersona: string;
     private _listadoDepartamentos: Departamento[];
     private _idDepartamentoGuess: number;
+    private _idDepartamentoReal: number; // ← NUEVO: ID del departamento real
     //#endregion
 
     //#region CONSTRUCTORES
@@ -18,11 +19,13 @@ export class PersonaConListaDepartamentos {
         nombrePersona: string,
         apellidosPersona: string,
         listadoDepartamentos: Departamento[],
+        idDepartamentoReal: number, // ← NUEVO parámetro
         idDepartamentoGuess?: number
     ) {
         this._nombrePersona = nombrePersona;
         this._apellidosPersona = apellidosPersona;
         this._listadoDepartamentos = listadoDepartamentos;
+        this._idDepartamentoReal = idDepartamentoReal; // ← NUEVO
         this._idDepartamentoGuess = idDepartamentoGuess ?? 0;
     }
     //#endregion
@@ -58,6 +61,15 @@ export class PersonaConListaDepartamentos {
 
     set idDepartamentoGuess(value: number) {
         this._idDepartamentoGuess = value;
+    }
+
+    // ← NUEVO getter
+    get idDepartamentoReal(): number {
+        return this._idDepartamentoReal;
+    }
+
+    set idDepartamentoReal(value: number) {
+        this._idDepartamentoReal = value;
     }
     //#endregion
 }
