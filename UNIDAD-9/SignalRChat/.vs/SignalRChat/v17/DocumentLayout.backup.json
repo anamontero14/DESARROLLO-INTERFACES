@@ -1,0 +1,86 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat\\signalrchat\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|solutionrelative:signalrchat\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat\\signalrchat\\wwwroot\\js\\chat.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|solutionrelative:signalrchat\\wwwroot\\js\\chat.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat\\signalrchat\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|solutionrelative:signalrchat\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat\\signalrchat\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FAA64607-CA93-43AA-9064-7C61EB5DE617}|SignalRChat\\SignalRChat.csproj|solutionrelative:signalrchat\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "chat.js",
+              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\wwwroot\\js\\chat.js",
+              "RelativeDocumentMoniker": "SignalRChat\\wwwroot\\js\\chat.js",
+              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\wwwroot\\js\\chat.js",
+              "RelativeToolTip": "SignalRChat\\wwwroot\\js\\chat.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-15T12:16:02.441Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Pages\\Index.cshtml",
+              "RelativeDocumentMoniker": "SignalRChat\\Pages\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Pages\\Index.cshtml",
+              "RelativeToolTip": "SignalRChat\\Pages\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-15T12:14:38.328Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Program.cs",
+              "RelativeDocumentMoniker": "SignalRChat\\Program.cs",
+              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Program.cs",
+              "RelativeToolTip": "SignalRChat\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T12:13:48.671Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ChatHub.cs",
+              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Hubs\\ChatHub.cs",
+              "RelativeDocumentMoniker": "SignalRChat\\Hubs\\ChatHub.cs",
+              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat\\SignalRChat\\Hubs\\ChatHub.cs",
+              "RelativeToolTip": "SignalRChat\\Hubs\\ChatHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T12:12:48.632Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
