@@ -3,19 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
 interface Message {
   user: string;
   message: string;
 }
-
 
 const ChatApp = () => {
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [messageInput, setMessageInput] = useState('');
-
 
   useEffect(() => {
     // 1. Configurar la conexión
@@ -27,14 +24,12 @@ const ChatApp = () => {
     setConnection(newConnection);
   }, []);
 
-
   useEffect(() => {
     if (connection) {
       // 2. Iniciar la conexión
       connection.start()
         .then(() => {
           console.log('Conectado a SignalR en Azure');
-
 
           // 3. Escuchar el evento 'ReceiveMessage' (debe coincidir con tu código C#)
           connection.on("ReceiveMessage", (user: string, message: string) => {
@@ -44,7 +39,6 @@ const ChatApp = () => {
         .catch(e => console.log('Error de conexión: ', e));
     }
   }, [connection]);
-
 
   const sendMessage = async () => {
     if (connection && connection.state === signalR.HubConnectionState.Connected) {
