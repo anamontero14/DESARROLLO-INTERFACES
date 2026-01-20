@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ActiveDebugProfile>https</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>C:\Users\ana.montero\Documents\GitHub\SistemasDeGesti-nEmpresarial\Unidad10\SignalRChat\SignalRChat\Properties\PublishProfiles\SignalRChatMontero - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\ana.montero\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\SignalRChat\SignalRChat\Properties\PublishProfiles\SignalRChatMontero - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
