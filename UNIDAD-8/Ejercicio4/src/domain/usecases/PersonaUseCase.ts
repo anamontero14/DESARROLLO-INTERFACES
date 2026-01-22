@@ -30,9 +30,13 @@ export class PersonaUseCase implements IPersonaUseCase {
 
     if (esViernesOSabado) {
       resultado = personas.filter((persona) => {
-        const edad = this.calcularEdad(persona.FechaNacimiento);
-        return edad >= 18;
-      });
+        if (!persona.FechaNacimiento) {
+          //si no tiene fecha, no puede ser mayor de edad
+          return false;
+        }
+          const edad = this.calcularEdad(persona.FechaNacimiento);
+          return edad >= 18;
+        });
     } else {
       resultado = personas;
     }
@@ -65,17 +69,27 @@ export class PersonaUseCase implements IPersonaUseCase {
   }
 
   async eliminarPersona(idPersonaEliminar: number): Promise<number> {
+    // Validación de negocio: no eliminar los domingos (cliente)
     const hoy = new Date();
     const diaSemana = hoy.getDay();
     const esDomingo = diaSemana === 0;
-    let resultado = 0;
 
+    console.log(idPersonaEliminar)
     if (esDomingo) {
-      throw new Error("No se pueden eliminar personas los domingos");
-    } else {
-      resultado = 1;
+      // devolver un código o lanzar un error tipado para que la UI lo muestre claramente
+      //  -1 = prohibido por regla de negocio
+      return -1;
     }
 
-    return resultado;
+    try {
+      // aquí debes llamar a la capa que hace la petición HTTP (repositorio / datasource)
+      // supongamos que tienes this._personaRepo.deletePersona que devuelve 1 en éxito, 0 en fallo
+      const resultado = await this._personaRepository.eliminarPersona(idPersonaEliminar);
+      return resultado;
+    } catch (error) {
+      // log y rethrow o devolver 0 según convenga
+      console.error("Error técnico al eliminar persona en use case:", error);
+      return 0;
+    }
   }
 }

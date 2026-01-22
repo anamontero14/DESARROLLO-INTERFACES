@@ -39,19 +39,22 @@ export class PersonaBDAPI {
   }
 
   private mapearPersonas(data: any[]): Persona[] {
-    const personas = data.map((item) => {
+  return data.map((item) => {
+    const fecha = item.fechaNacimiento
+      ? new Date(item.fechaNacimiento)
+      : null;
+
       return new Persona(
         item.id,
         item.nombre,
         item.apellidos,
         item.telefono,
+        item.idDepartamento,
         item.direccion,
         item.foto,
-        new Date(item.fechaNacimiento),
-        item.idDepartamento
+        fecha
       );
     });
-    return personas;
   }
 
   private mapearDepartamentos(data: any[]): Departamento[] {

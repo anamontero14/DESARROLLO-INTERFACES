@@ -1,7 +1,7 @@
 // src/app/(drawer)/ListadoPersonas.tsx
 
 import React, { JSX, useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, TextInput, StyleSheet, Alert, ActivityIndicator, Platform } from "react-native";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "expo-router";
 import { container } from "../../../core/container";
@@ -48,26 +48,48 @@ const ListadoPersonas: React.FC = observer(() => {
   }
 
   function handleEliminar(id: number): void {
-    Alert.alert(
-      "Confirmar eliminación",
-      "¿Estás seguro de que deseas eliminar esta persona?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: () => eliminarPersona(id),
-        },
-      ]
-    );
+    //comprobar la plataforma
+    //si estamos en web
+    if (Platform.OS == 'web') {
+      //se le pregunta al usuario si desea eliminar a la persona
+      if (window.confirm("¿Seguro que deseas eliminar a la persona?")) {
+        //se llama al método eliminar y se le manda el id
+        eliminarPersona(id);
+      }
+    } else {
+      //si no está en web se usa Alert.alert
+      Alert.alert(
+        "Confirmar eliminación",
+        "¿Estás seguro de que deseas eliminar esta persona?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Eliminar",
+            style: "destructive",
+            onPress: () => eliminarPersona(id),
+          },
+        ]
+      );
+    }
   }
 
   async function eliminarPersona(id: number): Promise<void> {
     try {
       await personaVM.eliminarPersona(id);
+      //comprobar la plataforma en la que estamos
+      if (Platform.OS == 'web') {
+        alert("Éxito. Persona eliminada correctamente")
+      } else {
+        Alert.alert("Éxito", "Persona eliminada correctamente");
+      }
     } catch (error) {
       const mensaje = error instanceof Error ? error.message : "Error desconocido";
-      Alert.alert("Error", mensaje);
+      //comprobar la plataforma en la que estamos
+      if (Platform.OS == 'web') {
+        alert("Error")
+      } else {
+        Alert.alert("Error", mensaje);
+      }
     }
   }
 

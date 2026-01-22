@@ -1,7 +1,7 @@
 // src/presenter/viewmodels/DepartamentoVM.ts
 
 import { injectable, inject } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { IDepartamentoUseCase } from "../../domain/interfaces/usecases/IDepartamentoUseCase";
 import { Departamento } from "../../domain/entities/Departamento";
 import { TYPES } from "../../core/types";
@@ -35,38 +35,80 @@ export class DepartamentoViewModel {
   }
 
   async cargarDepartamentos(): Promise<void> {
-    this._isLoading = true;
-    const departamentos = await this._casoDeUsoDepartamento.getAllDepartamentos();
-    this._departamentosList = departamentos;
-    this._isLoading = false;
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
+    try {
+      const departamentos = await this._casoDeUsoDepartamento.getAllDepartamentos();
+      
+      runInAction(() => {
+        this._departamentosList = departamentos;
+      });
+    } catch (error) {
+      console.error("Error al cargar departamentos:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
   async crearDepartamento(departamento: Departamento): Promise<void> {
-    this._isLoading = true;
-    await this._casoDeUsoDepartamento.insertarDepartamento(departamento);
-    await this.cargarDepartamentos();
-    this._isLoading = false;
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
+    try {
+      await this._casoDeUsoDepartamento.insertarDepartamento(departamento);
+      await this.cargarDepartamentos();
+    } catch (error) {
+      console.error("Error al crear departamento:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
   async editarDepartamento(idDepartamentoEditar: number, departamento: Departamento): Promise<void> {
-    this._isLoading = true;
-    await this._casoDeUsoDepartamento.editarDepartamento(idDepartamentoEditar, departamento);
-    await this.cargarDepartamentos();
-    this._isLoading = false;
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
+    try {
+      await this._casoDeUsoDepartamento.editarDepartamento(idDepartamentoEditar, departamento);
+      await this.cargarDepartamentos();
+    } catch (error) {
+      console.error("Error al editar departamento:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
   async eliminarDepartamento(idDepartamentoEliminar: number): Promise<void> {
-    this._isLoading = true;
-    
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
     try {
       await this._casoDeUsoDepartamento.eliminarDepartamento(idDepartamentoEliminar);
-      const departamentosFiltrados = this._departamentosList.filter(d => d.ID !== idDepartamentoEliminar);
-      this._departamentosList = departamentosFiltrados;
+      
+      runInAction(() => {
+        this._departamentosList = this._departamentosList.filter(d => d.ID !== idDepartamentoEliminar);
+      });
     } catch (error) {
       console.error("Error al eliminar departamento:", error);
       throw error;
     } finally {
-      this._isLoading = false;
+      runInAction(() => {
+        this._isLoading = false;
+      });
     }
   }
 }

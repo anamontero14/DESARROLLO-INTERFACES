@@ -65,6 +65,7 @@ const ListadoDepartamentos: React.FC = observer(() => {
     try {
       await departamentoVM.eliminarDepartamento(id);
       Alert.alert("Éxito", "Departamento eliminado correctamente");
+      cargarDatos();
     } catch (error) {
       const mensaje = error instanceof Error ? error.message : "Error desconocido";
       Alert.alert("Error", mensaje);
