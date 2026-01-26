@@ -93,7 +93,6 @@ export class PersonaViewModel {
     runInAction(() => { this._isLoading = true; });
     try {
       await this._casoDeUsoPersona.eliminarPersona(idPersonaEliminar);
-      console.log("VM: eliminarPersona success");
       await this.cargarPersonas();
     } catch (error) {
       console.error("VM: eliminarPersona error", error);
