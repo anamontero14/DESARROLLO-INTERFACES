@@ -15,7 +15,6 @@ const ListadoDepartamentos: React.FC = observer(() => {
   const departamentoVM = container.get<DepartamentoViewModel>(TYPES.DepartamentoViewModel);
   const router = useRouter();
   const [busqueda, setBusqueda] = useState<string>("");
-  const departamentosFiltrados = filtrarDepartamentos();
 
   useEffect(() => {
     cargarDatos();
@@ -25,115 +24,144 @@ const ListadoDepartamentos: React.FC = observer(() => {
     departamentoVM.cargarDepartamentos();
   }
 
-  function filtrarDepartamentos(): Departamento[] {
-    const lista = departamentoVM.DepartamentoList;
-    let resultado: Departamento[] = [];
-
-    if (busqueda.trim() === "") {
-      resultado = lista;
-    } else {
-      const busquedaLower = busqueda.toLowerCase();
-      resultado = lista.filter((dept: { Nombre: string; }) => {
-        return dept.Nombre.toLowerCase().includes(busquedaLower);
-      });
+  function obtenerDepartamentosFiltrados(): Departamento[] {
+    if (esBusquedaVacia()) {
+      return departamentoVM.DepartamentoList;
     }
-
-    return resultado;
+    
+    return filtrarDepartamentosPorNombre();
   }
 
-  function handleEditar(departamento: Departamento): void {
+  function esBusquedaVacia(): boolean {
+    return busqueda.trim() === "";
+  }
+
+  function filtrarDepartamentosPorNombre(): Departamento[] {
+    const busquedaLower = busqueda.toLowerCase();
+    
+    return departamentoVM.DepartamentoList.filter((departamento) => {
+      return departamento.Nombre.toLowerCase().includes(busquedaLower);
+    });
+  }
+
+  function navegarAEdicion(departamento: Departamento): void {
     departamentoVM.DepartamentoSeleccionado = departamento;
     router.push("/(drawer)/departamentos/EditarInsertarDepartamento");
   }
 
-  function handleEliminar(id: number): void {
-    //comprobar la plataforma
-        //si estamos en web
-        if (Platform.OS == 'web') {
-          //se le pregunta al usuario si desea eliminar a la persona
-          if (window.confirm("¿Seguro que deseas eliminar a la persona?")) {
-            //se llama al método eliminar y se le manda el id
-            eliminarDepartamento(id);
-          }
-        } else {
-          //si no está en web se usa Alert.alert
-          Alert.alert(
-            "Confirmar eliminación",
-            "¿Estás seguro de que deseas eliminar este departamento?",
-            [
-              { text: "Cancelar", style: "cancel" },
-              {
-                text: "Eliminar",
-                style: "destructive",
-                onPress: () => eliminarDepartamento(id)
-              },
-            ]
-          );
-        }
+  function confirmarEliminacion(id: number): void {
+    if (Platform.OS === 'web') {
+      confirmarEliminacionWeb(id);
+    } else {
+      confirmarEliminacionMovil(id);
+    }
+  }
+
+  function confirmarEliminacionWeb(id: number): void {
+    if (window.confirm("¿Seguro que deseas eliminar el departamento?")) {
+      eliminarDepartamento(id);
+    }
+  }
+
+  function confirmarEliminacionMovil(id: number): void {
+    Alert.alert(
+      "Confirmar eliminación",
+      "¿Estás seguro de que deseas eliminar este departamento?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => eliminarDepartamento(id)
+        },
+      ]
+    );
   }
 
   async function eliminarDepartamento(id: number): Promise<void> {
     try {
-          await departamentoVM.eliminarDepartamento(id);
-          //comprobar la plataforma en la que estamos
-          if (Platform.OS == 'web') {
-            alert("Éxito. Departamento eliminado correctamente")
-          } else {
-            Alert.alert("Éxito", "Departamento eliminado correctamente");
-          }
-        } catch (error) {
-          const mensaje = error instanceof Error ? error.message : "Error desconocido";
-          //comprobar la plataforma en la que estamos
-          if (Platform.OS == 'web') {
-            alert("Error. No se puede eliminar el departamento porque hay personas asociadas a él")
-          } else {
-            Alert.alert("Error. No se puede eliminar el departamento porque hay personas asociadas a él", mensaje);
-          }
-        }
+      await departamentoVM.eliminarDepartamento(id);
+      mostrarMensajeExito();
+    } catch (error) {
+      mostrarMensajeError(error);
+    }
   }
 
-  function handleAñadir(): void {
+  function mostrarMensajeExito(): void {
+    const mensaje = "Departamento eliminado correctamente";
+    
+    if (Platform.OS === 'web') {
+      alert(mensaje);
+    } else {
+      Alert.alert("Éxito", mensaje);
+    }
+  }
+
+  function mostrarMensajeError(error: unknown): void {
+    const mensajeError = "No se puede eliminar el departamento porque tiene personas asociadas";
+    
+    if (Platform.OS === 'web') {
+      alert(mensajeError);
+    } else {
+      const detalleError = error instanceof Error ? error.message : "Error desconocido";
+      Alert.alert("Error", `${mensajeError}\n${detalleError}`);
+    }
+  }
+
+  function navegarACreacion(): void {
     departamentoVM.DepartamentoSeleccionado = null;
     router.push("/(drawer)/departamentos/EditarInsertarDepartamento");
   }
 
-  function renderDepartamento({ item }: { item: Departamento }): JSX.Element {
+  function renderizarDepartamento({ item }: { item: Departamento }): JSX.Element {
     return (
       <Elemento
         titulo={item.Nombre}
-        onPress={() => handleEditar(item)}
-        onDelete={() => handleEliminar(item.ID)}
+        onPress={() => navegarAEdicion(item)}
+        onDelete={() => confirmarEliminacion(item.ID)}
       />
     );
   }
 
-  function renderContenido(): JSX.Element {
-    let contenido: JSX.Element = <View />;
-
+  function renderizarContenido(): JSX.Element {
     if (departamentoVM.isLoading) {
-      contenido = (
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      );
-    } else if (departamentosFiltrados.length === 0) {
-      contenido = (
-        <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>No hay departamentos para mostrar</Text>
-        </View>
-      );
-    } else {
-      contenido = (
-        <FlatList
-          data={departamentosFiltrados}
-          renderItem={renderDepartamento}
-          keyExtractor={(item) => item.ID.toString()}
-          contentContainerStyle={styles.listContent}
-        />
-      );
+      return renderizarCargando();
     }
+    
+    const departamentosFiltrados = obtenerDepartamentosFiltrados();
+    
+    if (departamentosFiltrados.length === 0) {
+      return renderizarListaVacia();
+    }
+    
+    return renderizarLista(departamentosFiltrados);
+  }
 
-    return contenido;
+  function renderizarCargando(): JSX.Element {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  function renderizarListaVacia(): JSX.Element {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.emptyText}>No hay departamentos para mostrar</Text>
+      </View>
+    );
+  }
+
+  function renderizarLista(departamentos: Departamento[]): JSX.Element {
+    return (
+      <FlatList
+        data={departamentos}
+        renderItem={renderizarDepartamento}
+        keyExtractor={(item) => item.ID.toString()}
+        contentContainerStyle={styles.listContent}
+      />
+    );
   }
 
   return (
@@ -148,10 +176,10 @@ const ListadoDepartamentos: React.FC = observer(() => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <BotonAñadir onPress={handleAñadir} titulo="Añadir Departamento" />
+        <BotonAñadir onPress={navegarACreacion} titulo="Añadir Departamento" />
       </View>
 
-      {renderContenido()}
+      {renderizarContenido()}
     </View>
   );
 });

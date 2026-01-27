@@ -3,21 +3,19 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, ScrollView, StyleSheet, Alert } from "react-native";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
+import { Picker } from "@react-native-picker/picker";
 import { container } from "../../../core/container";
 import { TYPES } from "../../../core/types";
 import { PersonaViewModel } from "../../../presenter/viewmodels/PersonaVM";
 import { DepartamentoViewModel } from "../../../presenter/viewmodels/DepartamentoVM";
 import { Persona } from "../../../domain/entities/Persona";
 import { BotonSubmit } from "../../../components/BotonSubmit";
-import { Picker } from "@react-native-picker/picker";
 
 const EditarInsertarPersonas: React.FC = observer(() => {
   const personaVM = container.get<PersonaViewModel>(TYPES.PersonaViewModel);
   const departamentoVM = container.get<DepartamentoViewModel>(TYPES.DepartamentoViewModel);
   const router = useRouter();
-  const personaSeleccionada = personaVM.PersonaSeleccionada;
-  const esEdicion = personaSeleccionada !== null;
 
   const [nombre, setNombre] = useState<string>("");
   const [apellidos, setApellidos] = useState<string>("");
@@ -28,93 +26,176 @@ const EditarInsertarPersonas: React.FC = observer(() => {
   const [idDepartamento, setIdDepartamento] = useState<number>(0);
 
   useEffect(() => {
-    cargarDepartamentos();
-    cargarDatosPersona();
+    departamentoVM.cargarDepartamentos();
   }, []);
 
-  function cargarDepartamentos(): void {
-    departamentoVM.cargarDepartamentos();
+  useFocusEffect(
+    React.useCallback(() => {
+      if (esEdicion()) {
+        cargarDatosPersona();
+      } else {
+        limpiarFormulario();
+      }
+    }, [personaVM.PersonaSeleccionada?.ID])
+  );
+
+  function esEdicion(): boolean {
+    return personaVM.PersonaSeleccionada !== null;
   }
 
   function cargarDatosPersona(): void {
-    if (personaSeleccionada) {
-      setNombre(personaSeleccionada.Nombre);
-      setApellidos(personaSeleccionada.Apellidos);
-      setTelefono(personaSeleccionada.Telefono);
-      setDireccion(personaSeleccionada.Direccion);
-      setFoto(personaSeleccionada.Foto);
-      setFechaNacimiento(formatearFecha(personaSeleccionada.FechaNacimiento));
-      setIdDepartamento(personaSeleccionada.IDDepartamento);
-    }
+    const persona = personaVM.PersonaSeleccionada!;
+    
+    setNombre(persona.Nombre);
+    setApellidos(persona.Apellidos);
+    setTelefono(persona.Telefono);
+    setDireccion(persona.Direccion || "");
+    setFoto(persona.Foto || "");
+    setFechaNacimiento(formatearFecha(persona.FechaNacimiento));
+    setIdDepartamento(persona.IDDepartamento);
   }
 
-  function formatearFecha(fecha: Date): string {
+  function formatearFecha(fecha: Date | null): string {
+    if (!fecha) return "";
+    
     const d = new Date(fecha);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
+    
     return `${year}-${month}-${day}`;
   }
 
-  function validarFormulario(): boolean {
-    let esValido = false;
-    const hayNombre = nombre.trim() !== "";
-    const hayApellidos = apellidos.trim() !== "";
-    const hayTelefono = telefono.trim() !== "";
-    const hayDepartamento = idDepartamento > 0;
+  function limpiarFormulario(): void {
+    setNombre("");
+    setApellidos("");
+    setTelefono("");
+    setDireccion("");
+    setFoto("");
+    setFechaNacimiento("");
+    setIdDepartamento(0);
+  }
 
-    if (!hayNombre || !hayApellidos || !hayTelefono || !hayDepartamento) {
-      Alert.alert("Error", "Por favor completa todos los campos obligatorios");
-      esValido = false;
-    } else {
-      esValido = true;
+  function validarFormulario(): boolean {
+    if (!validarCamposObligatorios()) {
+      return false;
     }
 
-    return esValido;
+    if (fechaNacimiento.trim() !== "" && !validarFormatoFecha()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function validarCamposObligatorios(): boolean {
+    const camposCompletos = 
+      nombre.trim() !== "" &&
+      apellidos.trim() !== "" &&
+      telefono.trim() !== "" &&
+      idDepartamento > 0;
+
+    if (!camposCompletos) {
+      Alert.alert(
+        "Error",
+        "Por favor completa todos los campos obligatorios (Nombre, Apellidos, Teléfono y Departamento)"
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  function validarFormatoFecha(): boolean {
+    const formatoCorrecto = /^\d{4}-\d{2}-\d{2}$/.test(fechaNacimiento);
+    
+    if (!formatoCorrecto) {
+      Alert.alert("Error", "La fecha debe estar en formato YYYY-MM-DD");
+      return false;
+    }
+
+    const fecha = new Date(fechaNacimiento);
+    
+    if (isNaN(fecha.getTime())) {
+      Alert.alert("Error", "La fecha proporcionada no es válida");
+      return false;
+    }
+
+    return true;
   }
 
   async function handleGuardar(): Promise<void> {
-    const esValido = validarFormulario();
-
-    if (!esValido) {
+    if (!validarFormulario()) {
       return;
     }
 
-    const fecha = fechaNacimiento ? new Date(fechaNacimiento) : new Date();
-    const idPersona = personaSeleccionada ? personaSeleccionada.ID : 0;
+    const persona = construirPersona();
 
-    const persona = new Persona(
+    try {
+      if (esEdicion()) {
+        await editarPersona(persona);
+      } else {
+        await crearPersona(persona);
+      }
+      
+      limpiarFormulario();
+      router.back();
+    } catch (error) {
+      mostrarErrorGuardado(error);
+    }
+  }
+
+  function construirPersona(): Persona {
+    const idPersona = esEdicion() ? personaVM.PersonaSeleccionada!.ID : 0;
+    const fecha = obtenerFechaValida();
+
+    return new Persona(
       idPersona,
       nombre,
       apellidos,
       telefono,
-      direccion,
-      foto,
-      fecha,
-      idDepartamento
+      idDepartamento,
+      direccion || null,
+      foto || null,
+      fecha
     );
-
-    try {
-      if (esEdicion) {
-        await personaVM.editarPersona(idPersona, persona);
-        Alert.alert("Éxito", "Persona actualizada correctamente");
-      } else {
-        await personaVM.crearPersona(persona);
-        Alert.alert("Éxito", "Persona creada correctamente");
-      }
-      router.back();
-    } catch (error) {
-      const mensaje = error instanceof Error ? error.message : "Error desconocido";
-      Alert.alert("Error", mensaje);
-    }
   }
 
-  const titulo = esEdicion ? "Editar Persona" : "Nueva Persona";
+  function obtenerFechaValida(): Date | null {
+    if (fechaNacimiento.trim() === "") {
+      return null;
+    }
+    
+    return new Date(fechaNacimiento);
+  }
+
+  async function editarPersona(persona: Persona): Promise<void> {
+    await personaVM.editarPersona(persona.ID, persona);
+    Alert.alert("Éxito", "Persona actualizada correctamente");
+  }
+
+  async function crearPersona(persona: Persona): Promise<void> {
+    await personaVM.crearPersona(persona);
+    Alert.alert("Éxito", "Persona creada correctamente");
+  }
+
+  function mostrarErrorGuardado(error: unknown): void {
+    const mensaje = error instanceof Error ? error.message : "Error desconocido";
+    Alert.alert("Error", `No se pudo guardar la persona: ${mensaje}`);
+  }
+
+  function obtenerTitulo(): string {
+    return esEdicion() ? "Editar Persona" : "Nueva Persona";
+  }
+
+  function obtenerTextoBoton(): string {
+    return esEdicion() ? "Actualizar" : "Crear";
+  }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{titulo}</Text>
+        <Text style={styles.title}>{obtenerTitulo()}</Text>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Nombre *</Text>
@@ -168,12 +249,12 @@ const EditarInsertarPersonas: React.FC = observer(() => {
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Fecha de Nacimiento</Text>
+          <Text style={styles.label}>Fecha de Nacimiento (opcional)</Text>
           <TextInput
             style={styles.input}
             value={fechaNacimiento}
             onChangeText={setFechaNacimiento}
-            placeholder="YYYY-MM-DD"
+            placeholder="YYYY-MM-DD (ej: 1990-01-15)"
           />
         </View>
 
@@ -182,10 +263,10 @@ const EditarInsertarPersonas: React.FC = observer(() => {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={idDepartamento}
-              onValueChange={(itemValue: React.SetStateAction<number>) => setIdDepartamento(itemValue)}
+              onValueChange={(itemValue) => setIdDepartamento(Number(itemValue))}
             >
               <Picker.Item label="Seleccione un departamento" value={0} />
-              {departamentoVM.DepartamentoList.map((dept: { ID: any; Nombre: any; }) => (
+              {departamentoVM.DepartamentoList.map((dept) => (
                 <Picker.Item key={dept.ID} label={dept.Nombre} value={dept.ID} />
               ))}
             </Picker>
@@ -193,7 +274,7 @@ const EditarInsertarPersonas: React.FC = observer(() => {
         </View>
 
         <BotonSubmit
-          titulo={esEdicion ? "Actualizar" : "Crear"}
+          titulo={obtenerTextoBoton()}
           onPress={handleGuardar}
           isLoading={personaVM.isLoading}
         />

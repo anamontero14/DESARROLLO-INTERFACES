@@ -73,8 +73,6 @@ export class PersonaUseCase implements IPersonaUseCase {
     const hoy = new Date();
     const diaSemana = hoy.getDay();
     const esDomingo = diaSemana === 0;
-
-    console.log(idPersonaEliminar)
     if (esDomingo) {
       // devolver un código o lanzar un error tipado para que la UI lo muestre claramente
       //  -1 = prohibido por regla de negocio

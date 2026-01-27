@@ -1,6 +1,6 @@
 // src/components/BotonSubmit.tsx
 
-import React from "react";
+import React, { JSX } from "react";
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from "react-native";
 
 interface BotonSubmitProps {
@@ -16,23 +16,42 @@ export const BotonSubmit: React.FC<BotonSubmitProps> = ({
   disabled = false,
   isLoading = false 
 }) => {
-  const handlePress = (): void => {
-    if (!disabled && !isLoading) {
+  function manejarPresion(): void {
+    if (puedeEjecutarAccion()) {
       onPress();
     }
-  };
+  }
+
+  function puedeEjecutarAccion(): boolean {
+    return !disabled && !isLoading;
+  }
+
+  function estaDeshabilitado(): boolean {
+    return disabled || isLoading;
+  }
+
+  function obtenerEstiloBoton(): any[] {
+    if (disabled) {
+      return [styles.button, styles.buttonDisabled];
+    }
+    return [styles.button];
+  }
+
+  function renderizarContenido(): JSX.Element {
+    if (isLoading) {
+      return <ActivityIndicator color="#fff" />;
+    }
+    
+    return <Text style={styles.buttonText}>{titulo}</Text>;
+  }
 
   return (
     <TouchableOpacity 
-      style={[styles.button, disabled && styles.buttonDisabled]} 
-      onPress={handlePress}
-      disabled={disabled || isLoading}
+      style={obtenerEstiloBoton()} 
+      onPress={manejarPresion}
+      disabled={estaDeshabilitado()}
     >
-      {isLoading ? (
-        <ActivityIndicator color="#fff" />
-      ) : (
-        <Text style={styles.buttonText}>{titulo}</Text>
-      )}
+      {renderizarContenido()}
     </TouchableOpacity>
   );
 };

@@ -27,7 +27,9 @@ export class DepartamentoViewModel {
   }
 
   set DepartamentoSeleccionado(departamento: Departamento | null) {
-    this._departamentoSeleccionado = departamento;
+    runInAction(() => {
+      this._departamentoSeleccionado = departamento;
+    });
   }
 
   get isLoading(): boolean {
@@ -35,73 +37,85 @@ export class DepartamentoViewModel {
   }
 
   async cargarDepartamentos(): Promise<void> {
-    runInAction(() => {
-      this._isLoading = true;
-    });
+    this.activarCarga();
 
     try {
       const departamentos = await this._casoDeUsoDepartamento.getAllDepartamentos();
-      
-      runInAction(() => {
-        this._departamentosList = departamentos;
-      });
+      this.actualizarListaDepartamentos(departamentos);
     } catch (error) {
-      console.error("Error al cargar departamentos:", error);
+      console.error("error al cargar departamentos:", error);
       throw error;
     } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
+      this.desactivarCarga();
     }
   }
 
   async crearDepartamento(departamento: Departamento): Promise<void> {
-    runInAction(() => {
-      //el circulo de cargar se pone a true porque se tiene que mostrar
-      //ya que se están cargando datos de la BBDD
-      this._isLoading = true;
-    })
-    //se llama a la función de crear personas con el caso de uso
-    //mandándole el departamento nuevo
-    await this._casoDeUsoDepartamento.insertarDepartamento(departamento)
-    //y se vuelven a cargar los departamentos
-    await this.cargarDepartamentos()
-    runInAction(() => {
-      //y el circulito de cargar se va porque ya se ha creado la persona
-      this._isLoading = false; 
-    })
+    this.activarCarga();
+
+    try {
+      await this._casoDeUsoDepartamento.insertarDepartamento(departamento);
+      await this.cargarDepartamentos();
+    } catch (error) {
+      console.error("error al crear departamento:", error);
+      throw error;
+    } finally {
+      this.desactivarCarga();
+    }
   }
 
-  async editarDepartamento(idDepartamentoEditar: number, departamento: Departamento): Promise<void> {
-    runInAction(() => {
-      this._isLoading = true;
-    })
-    await this._casoDeUsoDepartamento.editarDepartamento(idDepartamentoEditar, departamento)
-    await this.cargarDepartamentos()
-    runInAction(() => {
-      //y el circulito de cargar se va porque ya se ha creado la persona
-      this._isLoading = false; 
-    })
+  async editarDepartamento(idDepartamento: number, departamento: Departamento): Promise<void> {
+    this.activarCarga();
+
+    try {
+      await this._casoDeUsoDepartamento.editarDepartamento(idDepartamento, departamento);
+      await this.cargarDepartamentos();
+    } catch (error) {
+      console.error("error al editar departamento:", error);
+      throw error;
+    } finally {
+      this.desactivarCarga();
+    }
   }
 
-  async eliminarDepartamento(idDepartamentoEliminar: number): Promise<void> {
+  async eliminarDepartamento(idDepartamento: number): Promise<void> {
+    this.activarCarga();
+
+    try {
+      const resultado = await this._casoDeUsoDepartamento.eliminarDepartamento(idDepartamento);
+      
+      if (this.esEliminacionFallida(resultado)) {
+        throw new Error("No se puede eliminar el departamento porque tiene personas asociadas");
+      }
+      
+      await this.cargarDepartamentos();
+    } catch (error) {
+      console.error("error al eliminar departamento:", error);
+      throw error;
+    } finally {
+      this.desactivarCarga();
+    }
+  }
+
+  private activarCarga(): void {
     runInAction(() => {
       this._isLoading = true;
     });
+  }
 
-    try {
-      await this._casoDeUsoDepartamento.eliminarDepartamento(idDepartamentoEliminar);
-      
-      runInAction(() => {
-        this._departamentosList = this._departamentosList.filter(d => d.ID !== idDepartamentoEliminar);
-      });
-    } catch (error) {
-      console.error("Error al eliminar departamento:", error);
-      throw error;
-    } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
-    }
+  private desactivarCarga(): void {
+    runInAction(() => {
+      this._isLoading = false;
+    });
+  }
+
+  private actualizarListaDepartamentos(departamentos: Departamento[]): void {
+    runInAction(() => {
+      this._departamentosList = departamentos;
+    });
+  }
+
+  private esEliminacionFallida(resultado: number): boolean {
+    return resultado === -1;
   }
 }

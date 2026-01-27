@@ -15,7 +15,6 @@ const ListadoPersonas: React.FC = observer(() => {
   const personaVM = container.get<PersonaViewModel>(TYPES.PersonaViewModel);
   const router = useRouter();
   const [busqueda, setBusqueda] = useState<string>("");
-  const personasFiltradas = filtrarPersonas();
 
   useEffect(() => {
     cargarDatos();
@@ -25,117 +24,149 @@ const ListadoPersonas: React.FC = observer(() => {
     personaVM.cargarPersonas();
   }
 
-  function filtrarPersonas(): Persona[] {
-    const lista = personaVM.PersonaList;
-    let resultado: Persona[] = [];
-
-    if (busqueda.trim() === "") {
-      resultado = lista;
-    } else {
-      const busquedaLower = busqueda.toLowerCase();
-      resultado = lista.filter((persona: { Nombre: any; Apellidos: any; }) => {
-        const nombreCompleto = `${persona.Nombre} ${persona.Apellidos}`.toLowerCase();
-        return nombreCompleto.includes(busquedaLower);
-      });
+  function obtenerPersonasFiltradas(): Persona[] {
+    if (esBusquedaVacia()) {
+      return personaVM.PersonaList;
     }
-
-    return resultado;
+    
+    return filtrarPersonasPorNombre();
   }
 
-  function handleEditar(persona: Persona): void {
+  function esBusquedaVacia(): boolean {
+    return busqueda.trim() === "";
+  }
+
+  function filtrarPersonasPorNombre(): Persona[] {
+    const busquedaLower = busqueda.toLowerCase();
+    
+    return personaVM.PersonaList.filter((persona) => {
+      const nombreCompleto = construirNombreCompleto(persona);
+      return nombreCompleto.includes(busquedaLower);
+    });
+  }
+
+  function construirNombreCompleto(persona: Persona): string {
+    return `${persona.Nombre} ${persona.Apellidos}`.toLowerCase();
+  }
+
+  function navegarAEdicion(persona: Persona): void {
     personaVM.PersonaSeleccionada = persona;
     router.push("/(drawer)/personas/EditarInsertarPersonas");
   }
 
-  function handleEliminar(id: number): void {
-    //comprobar la plataforma
-    //si estamos en web
-    if (Platform.OS == 'web') {
-      //se le pregunta al usuario si desea eliminar a la persona
-      if (window.confirm("¿Seguro que deseas eliminar a la persona?")) {
-        //se llama al método eliminar y se le manda el id
-        eliminarPersona(id);
-      }
+  function confirmarEliminacion(id: number): void {
+    if (Platform.OS === 'web') {
+      confirmarEliminacionWeb(id);
     } else {
-      //si no está en web se usa Alert.alert
-      Alert.alert(
-        "Confirmar eliminación",
-        "¿Estás seguro de que deseas eliminar esta persona?",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Eliminar",
-            style: "destructive",
-            onPress: () => eliminarPersona(id),
-          },
-        ]
-      );
+      confirmarEliminacionMovil(id);
     }
+  }
+
+  function confirmarEliminacionWeb(id: number): void {
+    if (window.confirm("¿Seguro que deseas eliminar a la persona?")) {
+      eliminarPersona(id);
+    }
+  }
+
+  function confirmarEliminacionMovil(id: number): void {
+    Alert.alert(
+      "Confirmar eliminación",
+      "¿Estás seguro de que deseas eliminar esta persona?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => eliminarPersona(id),
+        },
+      ]
+    );
   }
 
   async function eliminarPersona(id: number): Promise<void> {
     try {
       await personaVM.eliminarPersona(id);
-      //comprobar la plataforma en la que estamos
-      if (Platform.OS == 'web') {
-        alert("Éxito. Persona eliminada correctamente")
-      } else {
-        Alert.alert("Éxito", "Persona eliminada correctamente");
-      }
+      mostrarMensajeExito();
     } catch (error) {
-      const mensaje = error instanceof Error ? error.message : "Error desconocido";
-      //comprobar la plataforma en la que estamos
-      if (Platform.OS == 'web') {
-        alert("Error")
-      } else {
-        Alert.alert("Error", mensaje);
-      }
+      mostrarMensajeError(error);
     }
   }
 
-  function handleAñadir(): void {
+  function mostrarMensajeExito(): void {
+    const mensaje = "Persona eliminada correctamente";
+    
+    if (Platform.OS === 'web') {
+      alert(mensaje);
+    } else {
+      Alert.alert("Éxito", mensaje);
+    }
+  }
+
+  function mostrarMensajeError(error: unknown): void {
+    const mensaje = error instanceof Error ? error.message : "Error desconocido";
+    
+    if (Platform.OS === 'web') {
+      alert(`Error: ${mensaje}`);
+    } else {
+      Alert.alert("Error", mensaje);
+    }
+  }
+
+  function navegarACreacion(): void {
     personaVM.PersonaSeleccionada = null;
     router.push("/(drawer)/personas/EditarInsertarPersonas");
   }
 
-  function renderPersona({ item }: { item: Persona }): JSX.Element {
+  function renderizarPersona({ item }: { item: Persona }): JSX.Element {
     return (
       <Elemento
         titulo={`${item.Nombre} ${item.Apellidos}`}
         subtitulo={item.Telefono}
-        onPress={() => handleEditar(item)}
-        onDelete={() => handleEliminar(item.ID)}
+        onPress={() => navegarAEdicion(item)}
+        onDelete={() => confirmarEliminacion(item.ID)}
       />
     );
   }
 
-  function renderContenido(): JSX.Element {
-    let contenido: JSX.Element = <View />;
-
+  function renderizarContenido(): JSX.Element {
     if (personaVM.isLoading) {
-      contenido = (
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      );
-    } else if (personasFiltradas.length === 0) {
-      contenido = (
-        <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>No hay personas para mostrar</Text>
-        </View>
-      );
-    } else {
-      contenido = (
-        <FlatList
-          data={personasFiltradas}
-          renderItem={renderPersona}
-          keyExtractor={(item) => item.ID.toString()}
-          contentContainerStyle={styles.listContent}
-        />
-      );
+      return renderizarCargando();
     }
+    
+    const personasFiltradas = obtenerPersonasFiltradas();
+    
+    if (personasFiltradas.length === 0) {
+      return renderizarListaVacia();
+    }
+    
+    return renderizarLista(personasFiltradas);
+  }
 
-    return contenido;
+  function renderizarCargando(): JSX.Element {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  function renderizarListaVacia(): JSX.Element {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.emptyText}>No hay personas para mostrar</Text>
+      </View>
+    );
+  }
+
+  function renderizarLista(personas: Persona[]): JSX.Element {
+    return (
+      <FlatList
+        data={personas}
+        renderItem={renderizarPersona}
+        keyExtractor={(item) => item.ID.toString()}
+        contentContainerStyle={styles.listContent}
+      />
+    );
   }
 
   return (
@@ -150,10 +181,10 @@ const ListadoPersonas: React.FC = observer(() => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <BotonAñadir onPress={handleAñadir} titulo="Añadir Persona" />
+        <BotonAñadir onPress={navegarACreacion} titulo="Añadir Persona" />
       </View>
 
-      {renderContenido()}
+      {renderizarContenido()}
     </View>
   );
 });

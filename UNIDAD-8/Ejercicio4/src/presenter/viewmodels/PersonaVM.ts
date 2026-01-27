@@ -18,79 +18,87 @@ export class PersonaViewModel {
     makeAutoObservable(this);
   }
 
-  //devuelve una lista de personas
   get PersonaList(): Persona[] {
     return this._personasList;
   }
 
-  //devuelve la persona seleccionada
   get PersonaSeleccionada(): Persona | null {
     return this._personaSeleccionada;
   }
 
-  //actualiza la persona seleccionada EN LA VARIABLE DEL VIEW MODEL
+  // ✅ Envolver el setter en runInAction
   set PersonaSeleccionada(persona: Persona | null) {
-    this._personaSeleccionada = persona;
+    runInAction(() => {
+      this._personaSeleccionada = persona;
+    });
   }
 
-  //variable para controlar que los datos se están cargando
   get isLoading(): boolean {
     return this._isLoading;
   }
 
-  //función que carga personas de la BBDD
   async cargarPersonas(): Promise<void> {
     runInAction(() => {
-      //la variable que controla que se estén cargando los datos pasa a ser true
-      //(porque está cargando datos)
-      this._isLoading = true; 
-    })
-    //se almacenan la lista de todas las personas obtenidas en la variable
-    const personas = await this._casoDeUsoPersona.getAllPersonas();
+      this._isLoading = true;
+    });
     
-    runInAction(() => {
-      //se actualiza la variable de la lista de personas y la de carga de datos
-      this._personasList = personas;
-      //la carga de datos ha terminado
-      this._isLoading = false;
-    })
+    try {
+      const personas = await this._casoDeUsoPersona.getAllPersonas();
+      
+      runInAction(() => {
+        this._personasList = personas;
+      });
+    } catch (error) {
+      console.error("Error al cargar personas:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
-  //función que sirve para crear personas
   async crearPersona(persona: Persona): Promise<void> {
     runInAction(() => {
-      //el circulo de cargar se pone a true porque se tiene que mostrar
-      //ya que se están cargando datos de la BBDD
       this._isLoading = true;
-    })
-    //se llama a la función de crear personas con el caso de uso
-    //mandándole la persona nueva
-    await this._casoDeUsoPersona.insertarPersona(persona);
-    //y se vuelven a cargar las personas
-    await this.cargarPersonas();
-    runInAction(() => {
-      //y el circulito de cargar se va porque ya se ha creado la persona
-      this._isLoading = false; 
-    })
+    });
+    
+    try {
+      await this._casoDeUsoPersona.insertarPersona(persona);
+      await this.cargarPersonas();
+    } catch (error) {
+      console.error("Error al crear persona:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
   async editarPersona(idPersonaEditar: number, persona: Persona): Promise<void> {
     runInAction(() => {
-      //el circulo de cargar se pone a true porque se tiene que mostrar
-      //ya que se están cargando datos de la BBDD
       this._isLoading = true;
-    })
-    await this._casoDeUsoPersona.editarPersona(idPersonaEditar, persona);
-    await this.cargarPersonas();
-    runInAction(() => {
-      //y el circulito de cargar se va porque ya se ha creado la persona
-      this._isLoading = false; 
-    })
+    });
+    
+    try {
+      await this._casoDeUsoPersona.editarPersona(idPersonaEditar, persona);
+      await this.cargarPersonas();
+    } catch (error) {
+      console.error("Error al editar persona:", error);
+      throw error;
+    } finally {
+      runInAction(() => {
+        this._isLoading = false;
+      });
+    }
   }
 
   async eliminarPersona(idPersonaEliminar: number): Promise<void> {
-    console.log("VM: eliminarPersona start", idPersonaEliminar);
-    runInAction(() => { this._isLoading = true; });
+    runInAction(() => { 
+      this._isLoading = true; 
+    });
+    
     try {
       await this._casoDeUsoPersona.eliminarPersona(idPersonaEliminar);
       await this.cargarPersonas();
@@ -98,7 +106,9 @@ export class PersonaViewModel {
       console.error("VM: eliminarPersona error", error);
       throw error;
     } finally {
-      runInAction(() => { this._isLoading = false; });
+      runInAction(() => { 
+        this._isLoading = false; 
+      });
     }
   }
 }

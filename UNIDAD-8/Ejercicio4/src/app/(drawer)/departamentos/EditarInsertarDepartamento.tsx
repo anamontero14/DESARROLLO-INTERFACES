@@ -1,9 +1,9 @@
 // src/app/(drawer)/EditarInsertarDepartamento.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, ScrollView, StyleSheet, Alert } from "react-native";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { container } from "../../../core/container";
 import { TYPES } from "../../../core/types";
 import { DepartamentoViewModel } from "../../../presenter/viewmodels/DepartamentoVM";
@@ -13,66 +13,95 @@ import { BotonSubmit } from "../../../components/BotonSubmit";
 const EditarInsertarDepartamento: React.FC = observer(() => {
   const departamentoVM = container.get<DepartamentoViewModel>(TYPES.DepartamentoViewModel);
   const router = useRouter();
-  const departamentoSeleccionado = departamentoVM.DepartamentoSeleccionado;
-  const esEdicion = departamentoSeleccionado !== null;
-
   const [nombre, setNombre] = useState<string>("");
 
-  useEffect(() => {
-    cargarDatosDepartamento();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (esEdicion()) {
+        cargarDatosDepartamento();
+      } else {
+        limpiarFormulario();
+      }
+    }, [departamentoVM.DepartamentoSeleccionado?.ID])
+  );
+
+  function esEdicion(): boolean {
+    return departamentoVM.DepartamentoSeleccionado !== null;
+  }
 
   function cargarDatosDepartamento(): void {
-    if (departamentoSeleccionado) {
-      setNombre(departamentoSeleccionado.Nombre);
-    }
+    const departamento = departamentoVM.DepartamentoSeleccionado!;
+    setNombre(departamento.Nombre);
+  }
+
+  function limpiarFormulario(): void {
+    setNombre("");
   }
 
   function validarFormulario(): boolean {
-    let esValido = false;
-    const hayNombre = nombre.trim() !== "";
+    const nombreValido = nombre.trim() !== "";
 
-    if (!hayNombre) {
+    if (!nombreValido) {
       Alert.alert("Error", "El nombre del departamento es obligatorio");
-      esValido = false;
-    } else {
-      esValido = true;
+      return false;
     }
 
-    return esValido;
+    return true;
   }
 
   async function handleGuardar(): Promise<void> {
-    const esValido = validarFormulario();
-
-    if (!esValido) {
+    if (!validarFormulario()) {
       return;
     }
 
-    const idDepartamento = departamentoSeleccionado ? departamentoSeleccionado.ID : 0;
-    const departamento = new Departamento(idDepartamento, nombre);
+    const departamento = construirDepartamento();
 
     try {
-      if (esEdicion) {
-        await departamentoVM.editarDepartamento(idDepartamento, departamento);
-        Alert.alert("Éxito", "Departamento actualizado correctamente");
+      if (esEdicion()) {
+        await editarDepartamento(departamento);
       } else {
-        await departamentoVM.crearDepartamento(departamento);
-        Alert.alert("Éxito", "Departamento creado correctamente");
+        await crearDepartamento(departamento);
       }
+      
+      limpiarFormulario();
       router.back();
     } catch (error) {
-      const mensaje = error instanceof Error ? error.message : "Error desconocido";
-      Alert.alert("Error", mensaje);
+      mostrarErrorGuardado(error);
     }
   }
 
-  const titulo = esEdicion ? "Editar Departamento" : "Nuevo Departamento";
+  function construirDepartamento(): Departamento {
+    const idDepartamento = esEdicion() ? departamentoVM.DepartamentoSeleccionado!.ID : 0;
+    return new Departamento(idDepartamento, nombre);
+  }
+
+  async function editarDepartamento(departamento: Departamento): Promise<void> {
+    await departamentoVM.editarDepartamento(departamento.ID, departamento);
+    Alert.alert("Éxito", "Departamento actualizado correctamente");
+  }
+
+  async function crearDepartamento(departamento: Departamento): Promise<void> {
+    await departamentoVM.crearDepartamento(departamento);
+    Alert.alert("Éxito", "Departamento creado correctamente");
+  }
+
+  function mostrarErrorGuardado(error: unknown): void {
+    const mensaje = error instanceof Error ? error.message : "Error desconocido";
+    Alert.alert("Error", mensaje);
+  }
+
+  function obtenerTitulo(): string {
+    return esEdicion() ? "Editar Departamento" : "Nuevo Departamento";
+  }
+
+  function obtenerTextoBoton(): string {
+    return esEdicion() ? "Actualizar" : "Crear";
+  }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{titulo}</Text>
+        <Text style={styles.title}>{obtenerTitulo()}</Text>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Nombre del Departamento *</Text>
@@ -85,7 +114,7 @@ const EditarInsertarDepartamento: React.FC = observer(() => {
         </View>
 
         <BotonSubmit
-          titulo={esEdicion ? "Actualizar" : "Crear"}
+          titulo={obtenerTextoBoton()}
           onPress={handleGuardar}
           isLoading={departamentoVM.isLoading}
         />

@@ -13,12 +13,16 @@ interface BotonNavegarProps {
 export const BotonNavegar: React.FC<BotonNavegarProps> = ({ titulo, ruta }) => {
   const router = useRouter();
 
-  const handlePress = (): void => {
+  function manejarPresion(): void {
+    navegarARuta();
+  }
+
+  function navegarARuta(): void {
     router.push(ruta);
-  };
+  }
 
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
+    <TouchableOpacity style={styles.button} onPress={manejarPresion}>
       <Text style={styles.buttonText}>{titulo}</Text>
     </TouchableOpacity>
   );
