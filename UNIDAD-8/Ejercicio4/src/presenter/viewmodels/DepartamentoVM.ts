@@ -57,38 +57,31 @@ export class DepartamentoViewModel {
 
   async crearDepartamento(departamento: Departamento): Promise<void> {
     runInAction(() => {
+      //el circulo de cargar se pone a true porque se tiene que mostrar
+      //ya que se están cargando datos de la BBDD
       this._isLoading = true;
-    });
-
-    try {
-      await this._casoDeUsoDepartamento.insertarDepartamento(departamento);
-      await this.cargarDepartamentos();
-    } catch (error) {
-      console.error("Error al crear departamento:", error);
-      throw error;
-    } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
-    }
+    })
+    //se llama a la función de crear personas con el caso de uso
+    //mandándole el departamento nuevo
+    await this._casoDeUsoDepartamento.insertarDepartamento(departamento)
+    //y se vuelven a cargar los departamentos
+    await this.cargarDepartamentos()
+    runInAction(() => {
+      //y el circulito de cargar se va porque ya se ha creado la persona
+      this._isLoading = false; 
+    })
   }
 
   async editarDepartamento(idDepartamentoEditar: number, departamento: Departamento): Promise<void> {
     runInAction(() => {
       this._isLoading = true;
-    });
-
-    try {
-      await this._casoDeUsoDepartamento.editarDepartamento(idDepartamentoEditar, departamento);
-      await this.cargarDepartamentos();
-    } catch (error) {
-      console.error("Error al editar departamento:", error);
-      throw error;
-    } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
-    }
+    })
+    await this._casoDeUsoDepartamento.editarDepartamento(idDepartamentoEditar, departamento)
+    await this.cargarDepartamentos()
+    runInAction(() => {
+      //y el circulito de cargar se va porque ya se ha creado la persona
+      this._isLoading = false; 
+    })
   }
 
   async eliminarDepartamento(idDepartamentoEliminar: number): Promise<void> {

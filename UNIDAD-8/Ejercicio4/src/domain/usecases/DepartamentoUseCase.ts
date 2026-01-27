@@ -32,7 +32,28 @@ export class DepartamentoUseCase implements IDepartamentoUseCase {
   }
 
   async eliminarDepartamento(idDepartamentoEliminar: number): Promise<number> {
-    const resultado = await this._departamentoRepository.eliminarDepartamento(idDepartamentoEliminar);
+    var resultado = -1;
+    //recoge la validez de la operacion
+    var validez = await this.comprobarEliminarDepartamento(idDepartamentoEliminar)
+    //si el departamento NO tiene personas
+    if (validez) {
+      //el resultado es igualado a lo que devuelva eliminar departamento
+      resultado = await this._departamentoRepository.eliminarDepartamento(idDepartamentoEliminar);
+    }
     return resultado;
+  }
+
+  private async comprobarEliminarDepartamento(idDepartamento: number): Promise<Boolean> {
+    //variable que indicará si el departamento se puede borrar o no
+    var validez = false;
+    //constante que guardará el número de personas que se obtienen
+    const numPersonas = await this._departamentoRepository.contarPersonasEnDepartamento(idDepartamento);
+
+    //comprueba que NINGUNA persona esté en ese departamento antes de eliminarla
+    if (numPersonas == 0) {
+      validez = true
+    }
+    //devuelve la validez de la operación
+    return validez;
   }
 }

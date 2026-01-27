@@ -38,7 +38,6 @@ const ChatApp = () => {
 
       // llamas al viewmodel con el objeto
       await viewModel.sendMessage(usuario);
-      console.log('Dentro de sendMessage en la vista: ', usuario)
 
       // limpias el input del mensaje
       setMessageInput('');
@@ -75,7 +74,6 @@ const ChatApp = () => {
         data={messages}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
-          console.log("ITEM RECIBIDO EN FLATLIST DE LA VISTA:", item);
           return (
             <View style={styles.messageItem}>
               <Text style={styles.userText}>{item.nombre}:</Text>

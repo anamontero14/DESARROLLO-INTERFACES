@@ -197,4 +197,11 @@ export class PersonaBDAPI {
 
     return resultado;
   }
+
+  //función asíncrona para contar personas en departamento
+  async countPersonasByDepartamento(idDepartamento: number): Promise<number> {
+    const personas = await this.fetchPersonaList();
+    return personas.filter(p => p.IDDepartamento === idDepartamento).length;
+  }
+
 }

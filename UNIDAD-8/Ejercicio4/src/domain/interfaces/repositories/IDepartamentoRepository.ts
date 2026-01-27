@@ -7,4 +7,5 @@ export interface IDepartamentoRepository {
   editarDepartamento(idDepartamentoEditar: number, departamento: Departamento): Promise<number>;
   insertarDepartamento(departamentoNuevo: Departamento): Promise<number>;
   eliminarDepartamento(idDepartamentoEliminar: number): Promise<number>;
+  contarPersonasEnDepartamento(idDepartamentoContar: number): Promise<number>;
 }

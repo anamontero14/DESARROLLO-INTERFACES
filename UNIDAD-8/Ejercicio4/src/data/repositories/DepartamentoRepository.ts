@@ -33,4 +33,9 @@ export class DepartamentoRepository implements IDepartamentoRepository {
     const resultado = await this._dataSource.deleteDepartamento(idDepartamentoEliminar);
     return resultado;
   }
+
+  async contarPersonasEnDepartamento(idDepartamentoContar: number): Promise<number> {
+    const resultado = await this._dataSource.countPersonasByDepartamento(idDepartamentoContar)
+    return resultado
+  }
 }
