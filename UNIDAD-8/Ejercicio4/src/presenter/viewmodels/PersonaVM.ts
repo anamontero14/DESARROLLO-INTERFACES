@@ -5,11 +5,12 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { IPersonaUseCase } from "../../domain/interfaces/usecases/IPersonaUseCase";
 import { Persona } from "../../domain/entities/Persona";
 import { TYPES } from "../../core/types";
+import { PersonaDTO } from "../../domain/dtos/PersonaDTO";
 
 @injectable()
 export class PersonaViewModel {
-  private _personasList: Persona[] = [];
-  private _personaSeleccionada: Persona | null = null;
+  private _personasList: PersonaDTO[] = [];
+  private _personaSeleccionada: PersonaDTO | null = null;
   private _isLoading: boolean = false;
   private readonly _casoDeUsoPersona: IPersonaUseCase;
 
@@ -18,16 +19,15 @@ export class PersonaViewModel {
     makeAutoObservable(this);
   }
 
-  get PersonaList(): Persona[] {
+  get PersonaList(): PersonaDTO[] {
     return this._personasList;
   }
 
-  get PersonaSeleccionada(): Persona | null {
+  get PersonaSeleccionada(): PersonaDTO | null {
     return this._personaSeleccionada;
   }
 
-  // ✅ Envolver el setter en runInAction
-  set PersonaSeleccionada(persona: Persona | null) {
+  set PersonaSeleccionada(persona: PersonaDTO | null) {
     runInAction(() => {
       this._personaSeleccionada = persona;
     });
@@ -58,22 +58,22 @@ export class PersonaViewModel {
     }
   }
 
-  async crearPersona(persona: Persona): Promise<void> {
-    runInAction(() => {
-      this._isLoading = true;
-    });
-    
-    try {
-      await this._casoDeUsoPersona.insertarPersona(persona);
-      await this.cargarPersonas();
-    } catch (error) {
-      console.error("Error al crear persona:", error);
-      throw error;
-    } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
-    }
+  async crearPersona(persona: Persona): Promise<void> { 
+    runInAction(() => { 
+      this._isLoading = true; 
+    })
+
+    try { 
+      //le entra una persona y llama al caso de uso para insertarla
+      await this._casoDeUsoPersona.insertarPersona(persona); 
+      //después carga las personas
+      await this.cargarPersonas(); } 
+    finally { 
+      runInAction(() => { 
+        //se establece el isloading a false
+        this._isLoading = false; 
+      }) 
+    } 
   }
 
   async editarPersona(idPersonaEditar: number, persona: Persona): Promise<void> {

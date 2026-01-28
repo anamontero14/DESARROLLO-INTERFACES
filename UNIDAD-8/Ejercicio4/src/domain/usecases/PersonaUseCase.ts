@@ -5,6 +5,7 @@ import { IPersonaUseCase } from "../interfaces/usecases/IPersonaUseCase";
 import { IPersonaRepository } from "../interfaces/repositories/IPersonaRepository";
 import { Persona } from "../entities/Persona";
 import { TYPES } from "../../core/types";
+import { PersonaDTO } from "../dtos/PersonaDTO";
 
 @injectable()
 export class PersonaUseCase implements IPersonaUseCase {
@@ -16,78 +17,78 @@ export class PersonaUseCase implements IPersonaUseCase {
     this._personaRepository = personaRepository;
   }
 
-  async getAllPersonas(): Promise<Persona[]> {
-    const todasLasPersonas = await this._personaRepository.getAllPersonas();
-    const personasFiltradas = this.aplicarLogicaNegocio(todasLasPersonas);
-    return personasFiltradas;
-  }
-
-  private aplicarLogicaNegocio(personas: Persona[]): Persona[] {
-    const hoy = new Date();
-    const diaSemana = hoy.getDay();
-    const esViernesOSabado = diaSemana === 5 || diaSemana === 6;
-    let resultado: Persona[] = [];
-
-    if (esViernesOSabado) {
-      resultado = personas.filter((persona) => {
-        if (!persona.FechaNacimiento) {
-          //si no tiene fecha, no puede ser mayor de edad
-          return false;
-        }
-          const edad = this.calcularEdad(persona.FechaNacimiento);
-          return edad >= 18;
-        });
-    } else {
-      resultado = personas;
-    }
+  //función asíncrona que obtiene todas las personas aplicando la lógica de negocio
+  async getAllPersonas(): Promise<PersonaDTO[]> { 
+    //almaceno la lista de las personas en la constante
+    const personas = await this._personaRepository.getAllPersonas();
+    //creo otra constante para almacenar una lista de todas las personas
+    //mappeadas al dto
+    const personasDTO = personas.map(p => (
+      { ID: p.ID, 
+        Nombre: p.Nombre, 
+        Apellidos: p.Apellidos, 
+        Telefono: p.Telefono, 
+        Direccion: p.Direccion, 
+        Foto: p.Foto, 
+        FechaNacimiento: p.FechaNacimiento, 
+        IDDepartamento: p.IDDepartamento, 
+        Edad: p.FechaNacimiento ? this.calcularEdad(p.FechaNacimiento) : 0 }));
+    //ahora hago otra constante con otra lista que almacena las personas ya filtradas
+    const resultado = this.esFinDeSemana() ? personasDTO.filter(d => (d.Edad ?? 0) >= 18) : personasDTO; 
 
     return resultado;
   }
 
-  private calcularEdad(fechaNacimiento: Date): number {
-    const hoy = new Date();
-    const nacimiento = new Date(fechaNacimiento);
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const mes = hoy.getMonth() - nacimiento.getMonth();
-    const condicionMes = mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate());
+  /**
+   función asíncrona que devuelve un booleano 
+   Se crea también una constante que almacene el día actual.
+   @returns Devuelve un booleano para comprobar si es fin de semana o no.
+   Comprobando si el día de la semana es 5 o 6, si es o 5 o 6 significa que
+   sí es fin de semana entonces devuelve true
+   */
+  private esFinDeSemana(): boolean {
+    const diaSemana = new Date().getDay();
+    return diaSemana === 5 || diaSemana === 6;
+  }
 
-    if (condicionMes) {
-      edad = edad - 1;
-    }
+  //calcula la edad a partir de una fecha de nacimiento, devolviendo un entero
+  public calcularEdad(fechaNacimiento: Date): number {
+    //constante que almacena la fecha de hoy
+    const hoy = new Date();
+    //constante que almacena la fecha que entra por parámetros
+    const nacimiento = new Date(fechaNacimiento);
+    //se hace el cálculo de la edad
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
 
     return edad;
   }
 
+  // Edita una persona existente
   async editarPersona(idPersonaEditar: number, persona: Persona): Promise<number> {
-    const resultado = await this._personaRepository.editarPersona(idPersonaEditar, persona);
-    return resultado;
+    return await this._personaRepository.editarPersona(idPersonaEditar, persona);
   }
 
+  // Inserta una nueva persona
   async insertarPersona(personaNueva: Persona): Promise<number> {
-    const resultado = await this._personaRepository.insertarPersona(personaNueva);
-    return resultado;
+    return await this._personaRepository.insertarPersona(personaNueva);
   }
 
+  // Elimina una persona (regla de negocio: no permitido los domingos)
   async eliminarPersona(idPersonaEliminar: number): Promise<number> {
-    // Validación de negocio: no eliminar los domingos (cliente)
-    const hoy = new Date();
-    const diaSemana = hoy.getDay();
-    const esDomingo = diaSemana === 0;
-    if (esDomingo) {
-      // devolver un código o lanzar un error tipado para que la UI lo muestre claramente
-      //  -1 = prohibido por regla de negocio
-      return -1;
+    if (this.esDomingo()) {
+      return -1; // Código de error: prohibido por regla de negocio
     }
 
     try {
-      // aquí debes llamar a la capa que hace la petición HTTP (repositorio / datasource)
-      // supongamos que tienes this._personaRepo.deletePersona que devuelve 1 en éxito, 0 en fallo
-      const resultado = await this._personaRepository.eliminarPersona(idPersonaEliminar);
-      return resultado;
+      return await this._personaRepository.eliminarPersona(idPersonaEliminar);
     } catch (error) {
-      // log y rethrow o devolver 0 según convenga
-      console.error("Error técnico al eliminar persona en use case:", error);
-      return 0;
+      console.error("Error al eliminar persona:", error);
+      return 0; // Código de error técnico
     }
+  }
+
+  // Verifica si hoy es domingo
+  private esDomingo(): boolean {
+    return new Date().getDay() === 0;
   }
 }

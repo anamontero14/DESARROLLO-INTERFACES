@@ -8,7 +8,7 @@ export interface PersonaDTO {
   Telefono: string;
   Direccion: string;
   Foto: string;
-  FechaNacimiento: Date;
+  FechaNacimiento: Date | null;
   IDDepartamento: number;
-  NombreDepartamento: string;
+  Edad: number
 }

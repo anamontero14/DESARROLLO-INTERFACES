@@ -64,7 +64,7 @@ const EditarInsertarDepartamento: React.FC = observer(() => {
       }
       
       limpiarFormulario();
-      router.back();
+      router.push("/(drawer)/departamentos/ListadoDepartamentos");
     } catch (error) {
       mostrarErrorGuardado(error);
     }
@@ -95,22 +95,35 @@ const EditarInsertarDepartamento: React.FC = observer(() => {
   }
 
   function obtenerTextoBoton(): string {
-    return esEdicion() ? "Actualizar" : "Crear";
+    return esEdicion() ? "💾 Actualizar" : "➕ Crear";
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.header}>
         <Text style={styles.title}>{obtenerTitulo()}</Text>
+        <Text style={styles.subtitle}>
+          Los campos marcados con * son obligatorios
+        </Text>
+      </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Nombre del Departamento *</Text>
-          <TextInput
-            style={styles.input}
-            value={nombre}
-            onChangeText={setNombre}
-            placeholder="Ingrese el nombre del departamento"
-          />
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🏢 Información del Departamento</Text>
+          
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Nombre del Departamento *</Text>
+            <TextInput
+              style={styles.input}
+              value={nombre}
+              onChangeText={setNombre}
+              placeholder="Ingrese el nombre del departamento"
+              placeholderTextColor="#999"
+            />
+            <Text style={styles.helpText}>
+              Ejemplo: Recursos Humanos, Ventas, Marketing, etc.
+            </Text>
+          </View>
         </View>
 
         <BotonSubmit
@@ -128,32 +141,66 @@ export default EditarInsertarDepartamento;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f8f9fa",
+  },
+  header: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 8,
   },
   content: {
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
+  section: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 20,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
     color: "#333",
+    marginBottom: 15,
   },
   formGroup: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 5,
+    marginBottom: 8,
     color: "#333",
   },
   input: {
-    backgroundColor: "#fff",
-    padding: 12,
+    backgroundColor: "#f8f9fa",
+    padding: 14,
     borderRadius: 8,
     fontSize: 16,
     borderWidth: 1,
     borderColor: "#ddd",
+    color: "#333",
+  },
+  helpText: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 6,
+    fontStyle: "italic",
   },
 });

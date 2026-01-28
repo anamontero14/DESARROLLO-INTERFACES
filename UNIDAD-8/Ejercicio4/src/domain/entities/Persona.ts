@@ -18,7 +18,7 @@ export class Persona {
     IDDepartamento: number,
     Direccion?: string | null,
     Foto?: string | null,
-    FechaNacimiento?: Date | null
+    FechaNacimiento?: Date
   ) {
     this._ID = ID;
     this._Nombre = Nombre;
