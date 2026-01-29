@@ -1,7 +1,7 @@
 // src/app/(drawer)/EditarInsertarPersonas.tsx
 
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Alert, Image } from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Alert, Image, Platform } from "react-native";
 import { observer } from "mobx-react-lite";
 import { useRouter, useFocusEffect } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
@@ -13,10 +13,15 @@ import { Persona } from "../../../domain/entities/Persona";
 import { BotonSubmit } from "../../../components/BotonSubmit";
 
 const EditarInsertarPersonas: React.FC = observer(() => {
+  //constante que servirá para obtener los métodos del viewmodel
   const personaVM = container.get<PersonaViewModel>(TYPES.PersonaViewModel);
+  //constante que servirá para poder mostrar una lista de los departamentos a la
+  //hora de crear o editar una persona
   const departamentoVM = container.get<DepartamentoViewModel>(TYPES.DepartamentoViewModel);
+  //constante que nos sirve para poder usar métodos para movernos entre pantallas
   const router = useRouter();
 
+  //atributos que hacen una persona
   const [nombre, setNombre] = useState<string>("");
   const [apellidos, setApellidos] = useState<string>("");
   const [telefono, setTelefono] = useState<string>("");
@@ -25,70 +30,70 @@ const EditarInsertarPersonas: React.FC = observer(() => {
   const [fechaNacimiento, setFechaNacimiento] = useState<string>("");
   const [idDepartamento, setIdDepartamento] = useState<number>(0);
 
+  //carga los datos de los departamentos
   useEffect(() => {
     departamentoVM.cargarDepartamentos();
   }, []);
 
+
   useFocusEffect(
     React.useCallback(() => {
-      if (esEdicion()) {
-        cargarDatosPersona();
+      //a una constante se le iguala un booleano comprobando si la persona seleccionada
+      //es null o no, si es null significa que hay que crear una persona y si
+      //NO es null significa que estamos en la vista de editar
+      const esEdicion = personaVM.PersonaSeleccionada !== null;
+      
+      //si es true signigica que estamos en edicion
+      if (esEdicion) {
+        //la constante persona se iguala a la que se obtiene del viewmodel
+        //indicándole que NO es null
+        const persona = personaVM.PersonaSeleccionada!;
+        //constante que almacena la cadena de la fecha formateada
+        const fechaFormateada = formatearFecha(persona.FechaNacimiento);
+        //se settean los atributos de la persona a los de la persona seleccionada
+        setNombre(persona.Nombre);
+        setApellidos(persona.Apellidos);
+        setTelefono(persona.Telefono);
+        setDireccion(persona.Direccion || "");
+        setFoto(persona.Foto || "");
+        setFechaNacimiento(fechaFormateada);
+        setIdDepartamento(persona.IDDepartamento);
       } else {
-        limpiarFormulario();
+        //si no estamos en la lista de editar entonces se está creando
+        //una nueva persona entonces iguala todos los campos a vacíos
+        setNombre("");
+        setApellidos("");
+        setTelefono("");
+        setDireccion("");
+        setFoto("");
+        setFechaNacimiento("");
+        setIdDepartamento(0);
       }
     }, [personaVM.PersonaSeleccionada?.ID])
   );
 
-  function esEdicion(): boolean {
-    return personaVM.PersonaSeleccionada !== null;
-  }
-
-  function cargarDatosPersona(): void {
-    const persona = personaVM.PersonaSeleccionada!;
-    
-    setNombre(persona.Nombre);
-    setApellidos(persona.Apellidos);
-    setTelefono(persona.Telefono);
-    setDireccion(persona.Direccion || "");
-    setFoto(persona.Foto || "");
-    setFechaNacimiento(formatearFecha(persona.FechaNacimiento));
-    setIdDepartamento(persona.IDDepartamento);
-  }
-
+  //función que se encarga de formatear la fecha para que sea
+  //visible como un string
   function formatearFecha(fecha: Date | null): string {
-    if (!fecha) return "";
+    let resultado = "";
     
-    const d = new Date(fecha);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
+    if (fecha) {
+      const d = new Date(fecha);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      resultado = `${year}-${month}-${day}`;
+    }
     
-    return `${year}-${month}-${day}`;
+    return resultado;
   }
 
-  function limpiarFormulario(): void {
-    setNombre("");
-    setApellidos("");
-    setTelefono("");
-    setDireccion("");
-    setFoto("");
-    setFechaNacimiento("");
-    setIdDepartamento(0);
-  }
-
+  //función que se encarga de comprobar que el formulario esté
+  //bien formado y con todos los campos obligatorios rellenos
   function validarFormulario(): boolean {
-    if (!validarCamposObligatorios()) {
-      return false;
-    }
-
-    if (!validarFormatoFecha()) {
-      return false;
-    }
-
-    return true;
-  }
-
-  function validarCamposObligatorios(): boolean {
+    //utiliza una variable auxiliar para comprobar que los campos son válidos
+    let esValido = false;
+    
     const camposCompletos = 
       nombre.trim() !== "" &&
       apellidos.trim() !== "" &&
@@ -101,62 +106,53 @@ const EditarInsertarPersonas: React.FC = observer(() => {
         "Error",
         "Por favor completa todos los campos obligatorios (Nombre, Apellidos, Teléfono, Fecha de Nacimiento y Departamento)"
       );
-      return false;
+      return esValido;
     }
 
-    return true;
-  }
-
-  function validarFormatoFecha(): boolean {
     const formatoCorrecto = /^\d{4}-\d{2}-\d{2}$/.test(fechaNacimiento);
     
     if (!formatoCorrecto) {
       Alert.alert("Error", "La fecha debe estar en formato YYYY-MM-DD");
-      return false;
+      return esValido;
     }
 
     const fecha = new Date(fechaNacimiento);
+    const fechaInvalida = isNaN(fecha.getTime());
     
-    if (isNaN(fecha.getTime())) {
+    if (fechaInvalida) {
       Alert.alert("Error", "La fecha proporcionada no es válida");
-      return false;
+      return esValido;
     }
 
     const hoy = new Date();
-    if (fecha > hoy) {
+    const fechaFutura = fecha > hoy;
+    
+    if (fechaFutura) {
       Alert.alert("Error", "La fecha de nacimiento no puede ser futura");
-      return false;
+      return esValido;
     }
 
-    return true;
+    esValido = true;
+    return esValido;
   }
 
+  //función asíncrona que gestiona la función de guardar
   async function handleGuardar(): Promise<void> {
-    if (!validarFormulario()) {
+    //se almacena en una variable si el formulario es válido o no
+    const formularioValido = validarFormulario();
+    //si el formulario no es válido se acaba ahí la ejecución
+    if (!formularioValido) {
       return;
     }
-
-    const persona = construirPersona();
-
-    try {
-      if (esEdicion()) {
-        await editarPersona(persona);
-      } else {
-        await crearPersona(persona);
-      }
-      
-      limpiarFormulario();
-      router.push("/(drawer)/personas/ListadoPersonas");
-    } catch (error) {
-      mostrarErrorGuardado(error);
-    }
-  }
-
-  function construirPersona(): Persona {
-    const idPersona = esEdicion() ? personaVM.PersonaSeleccionada!.ID : 0;
+    //se almacena en la constante si hay una persona seleccionada o no
+    //comprobando así si estamos en la edición de personas o no
+    const esEdicion = personaVM.PersonaSeleccionada !== null;
+    //si edición es true usa el id de la persona seleccionada, si no usa 0
+    const idPersona = esEdicion ? personaVM.PersonaSeleccionada!.ID : 0;
+    //la constante fecha almacena la fecha de nacimiento y ya
     const fecha = new Date(fechaNacimiento);
-
-    return new Persona(
+    //se crea una nueva persona
+    const persona = new Persona(
       idPersona,
       nombre,
       apellidos,
@@ -166,50 +162,60 @@ const EditarInsertarPersonas: React.FC = observer(() => {
       foto || null,
       fecha
     );
-  }
 
-  async function editarPersona(persona: Persona): Promise<void> {
-    await personaVM.editarPersona(persona.ID, persona);
-    Alert.alert("Éxito", "Persona actualizada correctamente");
-  }
+    try {
+      //dependiendo de en qué vista estemos se manda un mensaje u otro
+      const mensajeExito = esEdicion ? "Persona actualizada correctamente" : "Persona creada correctamente";
+      //si estamos en la vista de edición
+      if (esEdicion) {
+        //se edita a la persona mediante el método del viewmodel que pide su id y el objeto de la persona
+        await personaVM.editarPersona(persona.ID, persona);
+      } else {
+        //si no crea una persona
+        await personaVM.crearPersona(persona);
+      }
 
-  async function crearPersona(persona: Persona): Promise<void> {
-    await personaVM.crearPersona(persona);
-    Alert.alert("Éxito", "Persona creada correctamente");
+      //dependiendo de la plataforma en la que esté utiliza una alerta u otra
+      if (Platform.OS == "web") {
+        alert("Éxito" + mensajeExito)
+      } else {
+        //comprobar la plataforma en la que se encuentra
+        Alert.alert("Éxito", mensajeExito);
+      }
+      
+      //se vuelven a inicializar todos los campos a vacíos
+      setNombre("");
+      setApellidos("");
+      setTelefono("");
+      setDireccion("");
+      setFoto("");
+      setFechaNacimiento("");
+      setIdDepartamento(0);
+      //se vuelve a la vista del listado de personas
+      router.push("/(drawer)/personas/ListadoPersonas");
+    } catch (error) {
+      //constante que almacena el mensaje de error
+      const mensaje = error instanceof Error ? error.message : "Error desconocido";
+      //dependiendo de la plataforma se manda un tipo de alerta u otro
+      if (Platform.OS == "web") {
+        alert("Éxito" + mensaje)
+      } else {
+        Alert.alert("Error", `No se pudo guardar la persona: ${mensaje}`);
+      }
+    }
   }
-
-  function mostrarErrorGuardado(error: unknown): void {
-    const mensaje = error instanceof Error ? error.message : "Error desconocido";
-    Alert.alert("Error", `No se pudo guardar la persona: ${mensaje}`);
-  }
-
-  function obtenerTitulo(): string {
-    return esEdicion() ? "Editar Persona" : "Nueva Persona";
-  }
-
-  function obtenerTextoBoton(): string {
-    return esEdicion() ? "💾 Actualizar" : "➕ Crear";
-  }
-
-  function renderVistaPrevia(): JSX.Element | null {
-    if (!foto) return null;
-
-    return (
-      <View style={styles.vistaPrevia}>
-        <Text style={styles.vistaPreviaLabel}>Vista previa:</Text>
-        <Image 
-          source={{ uri: foto }} 
-          style={styles.imagenPrevia}
-          onError={() => Alert.alert("Error", "No se pudo cargar la imagen")}
-        />
-      </View>
-    );
-  }
+  
+  //se almacena true o false dependiendo de si la persona es null o no
+  const esEdicion = personaVM.PersonaSeleccionada !== null;
+  //dependiendo tmb de si edición es true o false el titulo será uno u otro
+  const titulo = esEdicion ? "Editar Persona" : "Nueva Persona";
+  const textoBoton = esEdicion ? "💾 Actualizar" : "➕ Crear";
+  const mostrarVistaPrevia = foto !== "";
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{obtenerTitulo()}</Text>
+        <Text style={styles.title}>{titulo}</Text>
         <Text style={styles.subtitle}>
           Los campos marcados con * son obligatorios
         </Text>
@@ -319,11 +325,20 @@ const EditarInsertarPersonas: React.FC = observer(() => {
             </Text>
           </View>
 
-          {renderVistaPrevia()}
+          {mostrarVistaPrevia && (
+            <View style={styles.vistaPrevia}>
+              <Text style={styles.vistaPreviaLabel}>Vista previa:</Text>
+              <Image 
+                source={{ uri: foto }} 
+                style={styles.imagenPrevia}
+                onError={() => Alert.alert("Error", "No se pudo cargar la imagen")}
+              />
+            </View>
+          )}
         </View>
 
         <BotonSubmit
-          titulo={obtenerTextoBoton()}
+          titulo={textoBoton}
           onPress={handleGuardar}
           isLoading={personaVM.isLoading}
         />
