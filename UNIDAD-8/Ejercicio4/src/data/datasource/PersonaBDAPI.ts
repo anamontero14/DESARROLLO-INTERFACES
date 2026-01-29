@@ -6,8 +6,10 @@ import { Departamento } from "../../domain/entities/Departamento";
 
 @injectable()
 export class PersonaBDAPI {
+  //url de la api
   private readonly API_URL: string = "https://montero-hzedh8ahesg5cceh.francecentral-01.azurewebsites.net/API";
 
+  //llamada a la api para conseguir el listado de las personas
   async fetchPersonaList(): Promise<Persona[]> {
     let resultado: Persona[] = [];
 
@@ -23,6 +25,7 @@ export class PersonaBDAPI {
     return resultado;
   }
 
+  //llamada a la api para conseguir el listado de los departamentos
   async fetchDepartamentoList(): Promise<Departamento[]> {
     let resultado: Departamento[] = [];
 
@@ -38,6 +41,11 @@ export class PersonaBDAPI {
     return resultado;
   }
 
+  /**
+   * Mappeo de las personas
+   * @param data 
+   * @returns Devuelve el listado de las personas mappeado
+   */
   private mapearPersonas(data: any[]): Persona[] {
     return data.map((item) => {
       const fecha = item.fechaNacimiento
@@ -57,18 +65,22 @@ export class PersonaBDAPI {
     });
   }
 
+  /**
+   * Meppeo de los departamentos
+   * @param data 
+   * @returns devuelve el listado de los departamentos mappeado
+   */
   private mapearDepartamentos(data: any[]): Departamento[] {
     const departamentos = data.map((item) => {
       return new Departamento(item.id, item.nombre);
     });
     return departamentos;
   }
-
+  //MÉTODOS DEL CRUD
   async insertPersona(persona: Persona): Promise<number> {
     let resultado = 0;
 
     try {
-      // ✅ SOLUCIÓN: Crear payload base con campos obligatorios
       const payload: any = {
         Nombre: persona.Nombre,
         Apellidos: persona.Apellidos,
@@ -122,7 +134,6 @@ export class PersonaBDAPI {
     let resultado = 0;
 
     try {
-      // ✅ SOLUCIÓN: Crear payload base con campos obligatorios
       const payload: any = {
         Nombre: persona.Nombre,
         Apellidos: persona.Apellidos,
@@ -163,7 +174,6 @@ export class PersonaBDAPI {
     let resultado = 0;
 
     try {
-      // ✅ También usar mayúsculas para departamentos
       const payload = {
         Nombre: departamento.Nombre
       };
@@ -253,6 +263,7 @@ export class PersonaBDAPI {
     return resultado;
   }
 
+  //contar las personas que hay en un departamento como parte de la lógica de negocio
   async countPersonasByDepartamento(idDepartamento: number): Promise<number> {
     const personas = await this.fetchPersonaList();
     return personas.filter(p => p.IDDepartamento === idDepartamento).length;
