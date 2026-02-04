@@ -1,22 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\",
+  "WorkspaceRootPath": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\hubs\\clsmensajeusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\hubs\\clsmensajeusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\wwwroot\\js\\chat.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\wwwroot\\js\\chat.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\wwwroot\\js\\chat.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\ana.montero\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\signalrchat2\\signalrchat2\\hubs\\clsmensajeusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C0FB42BA-CDB6-4C7C-9317-E41A37D57F1D}|SignalRChat2\\SignalRChat2.csproj|solutionrelative:signalrchat2\\hubs\\clsmensajeusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,15 +30,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "signalr.js",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+              "RelativeDocumentMoniker": "SignalRChat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+              "RelativeToolTip": "SignalRChat2\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-02-04T12:06:16.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "site.js",
-              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\site.js",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\site.js",
               "RelativeDocumentMoniker": "SignalRChat2\\wwwroot\\js\\site.js",
-              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\site.js",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\site.js",
               "RelativeToolTip": "SignalRChat2\\wwwroot\\js\\site.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
@@ -43,39 +60,38 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "chat.js",
-              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\chat.js",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\chat.js",
               "RelativeDocumentMoniker": "SignalRChat2\\wwwroot\\js\\chat.js",
-              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\chat.js",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\wwwroot\\js\\chat.js",
               "RelativeToolTip": "SignalRChat2\\wwwroot\\js\\chat.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-01-20T11:51:40.072Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "clsMensajeUsuario.cs",
-              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
               "RelativeDocumentMoniker": "SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
-              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
               "RelativeToolTip": "SignalRChat2\\Hubs\\clsMensajeUsuario.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-20T11:47:53.486Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T11:47:53.486Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "ChatHub.cs",
-              "DocumentMoniker": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\ChatHub.cs",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\ChatHub.cs",
               "RelativeDocumentMoniker": "SignalRChat2\\Hubs\\ChatHub.cs",
-              "ToolTip": "C:\\Users\\ana.montero\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\ChatHub.cs",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\SignalRChat2\\SignalRChat2\\Hubs\\ChatHub.cs",
               "RelativeToolTip": "SignalRChat2\\Hubs\\ChatHub.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T11:31:46.884Z",
               "EditorCaption": ""
