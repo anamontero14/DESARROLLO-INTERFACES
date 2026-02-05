@@ -18,7 +18,7 @@ const container = new Container();
 
 // Configurar la URL del hub
 container.bind<string>(TYPES.HubUrl).toConstantValue(
-    "https://localhost:7085/juegoHub"
+    "http://localhost:5236/juegoHub"
 );
 
 // Registrar DataSource como singleton

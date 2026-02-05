@@ -11,23 +11,29 @@ namespace Servidor3EnRaya.Hubs
         /// </summary>
         public override async Task OnConnectedAsync()
         {
-            //suma el número de los jugadores que hay en game info
+            Console.WriteLine("=================================");
+            Console.WriteLine($"JUGADOR CONECTADO: {Context.ConnectionId}");
+
             GameInfo.numJugadores++;
 
-            //si es el primer jugador que se conecta guarda su ID de conexión como jugador X
             if (GameInfo.numJugadores == 1)
             {
                 GameInfo.connectionIdJugadorX = Context.ConnectionId;
+                Console.WriteLine($"Asignado como JUGADOR X");
+                // Enviar símbolo al jugador 1
+                await Clients.Caller.SendAsync("AsignarSimbolo", "X");
             }
-            //si es el segundo jugador guarda su ID como jugador O y
-            //envía evento "IniciarPartida" a ambos clientes para que empiecen a jugar
             else if (GameInfo.numJugadores == 2)
             {
                 GameInfo.connectionIdJugadorO = Context.ConnectionId;
-                //una vez que haya 2 jugadores inicia la partida
+                Console.WriteLine($"Asignado como JUGADOR O");
+                // Enviar símbolo al jugador 2
+                await Clients.Caller.SendAsync("AsignarSimbolo", "O");
+                // Iniciar partida
                 await Clients.All.SendAsync("IniciarPartida");
             }
 
+            Console.WriteLine("=================================");
             await base.OnConnectedAsync();
         }
 

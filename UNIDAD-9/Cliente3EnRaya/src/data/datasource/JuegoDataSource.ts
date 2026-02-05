@@ -16,14 +16,12 @@ export class JuegoDataSource {
     }
 
     async connect(): Promise<void> {
-        let resultado: void;
-
-        // Solo conecta si está desconectado
         if (this.connection.state === signalR.HubConnectionState.Disconnected) {
-            resultado = await this.connection.start();
+            console.log("🔵 Intentando conectar a:", this.connection.baseUrl);
+            await this.connection.start();
+            console.log("✅ Conectado! Estado:", this.connection.state);
+            console.log("🆔 Connection ID:", this.connection.connectionId);
         }
-
-        return resultado;
     }
 
     async disconnect(): Promise<void> {

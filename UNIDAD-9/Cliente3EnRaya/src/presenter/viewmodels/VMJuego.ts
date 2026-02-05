@@ -21,7 +21,7 @@ export class VMJuego {
     private setTablero?: React.Dispatch<React.SetStateAction<string[][]>>;
     private setEsMiTurno?: React.Dispatch<React.SetStateAction<boolean>>;
 
-    constructor(@inject(TYPES.UseCaseJuego) private useCase: UseCaseJuego) {
+    constructor(@inject(TYPES.UseCaseJuego) public useCase: UseCaseJuego) {
         this.jugadorActual = 0;
         this.ganador = false;
         this.cantidadCasillasRellenas = 0;
