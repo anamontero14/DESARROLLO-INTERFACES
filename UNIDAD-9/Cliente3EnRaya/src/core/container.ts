@@ -2,41 +2,41 @@ import "reflect-metadata";
 import { Container } from "inversify";
 import { TYPES } from "./types";
 
-// Importar Data Layer
+//capa de data
 import { JuegoDataSource } from "../data/datasource/JuegoDataSource";
 import { IRepositoryJuego } from "../domain/interfaces/repositories/IRepositoryJuego";
 import { RepositoryJuego } from "../data/repositories/RepositoryJuego";
 
-// Importar Domain Layer
+//capa de domain
 import { UseCaseJuego } from "../domain/usecases/UseCaseJuego";
 
-// Importar Presenter Layer
+//viewmodel
 import { VMJuego } from "../presenter/viewmodels/VMJuego";
 
-// Crear instancia del contenedor
+//instancia del contenedor
 const container = new Container();
 
-// Configurar la URL del hub
+//url del hub
 container.bind<string>(TYPES.HubUrl).toConstantValue(
     "http://localhost:5236/juegoHub"
 );
 
-// Registrar DataSource como singleton
+//datasource se pone como singleton
 container
     .bind<JuegoDataSource>(TYPES.JuegoDataSource)
     .to(JuegoDataSource)
     .inSingletonScope();
 
-// Registrar Repository como singleton
+//repository como singleton
 container
     .bind<IRepositoryJuego>(TYPES.IRepositoryJuego)
     .to(RepositoryJuego)
     .inSingletonScope();
 
-// Registrar UseCase
+//caso de uso
 container.bind<UseCaseJuego>(TYPES.UseCaseJuego).to(UseCaseJuego);
 
-// Registrar ViewModel
+//biewmodel
 container.bind<VMJuego>(TYPES.VMJuego).to(VMJuego);
 
 export { container };

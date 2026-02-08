@@ -29,6 +29,11 @@ namespace Servidor3EnRaya.Hubs
                 //y comienza la partida
                 await Clients.All.SendAsync("IniciarPartida");
             }
+            else
+            {
+                // Si hay más de 2 jugadores, rechazar la conexión
+                Context.Abort();
+            }
 
             await base.OnConnectedAsync();
         }
@@ -39,12 +44,32 @@ namespace Servidor3EnRaya.Hubs
         /// <param name="exception"></param>
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            //resetea todos los valores para que se le obligue a los jugadores
-            //a conectarse de nuevo
-            GameInfo.numJugadores = 0;
-            GameInfo.turnoActual = "X";
-            GameInfo.connectionIdJugadorX = null;
-            GameInfo.connectionIdJugadorO = null;
+            // Identificar quién se desconectó
+            if (Context.ConnectionId == GameInfo.connectionIdJugadorX)
+            {
+                GameInfo.connectionIdJugadorX = null;
+            }
+            else if (Context.ConnectionId == GameInfo.connectionIdJugadorO)
+            {
+                GameInfo.connectionIdJugadorO = null;
+            }
+
+            // Decrementar jugadores
+            if (GameInfo.numJugadores > 0)
+            {
+                GameInfo.numJugadores--;
+            }
+
+            // Si se queda solo 1 o ninguno, resetear todo
+            if (GameInfo.numJugadores <= 0)
+            {
+                //resetea todos los valores para que se le obligue a los jugadores
+                //a conectarse de nuevo
+                GameInfo.numJugadores = 0;
+                GameInfo.turnoActual = "X";
+                GameInfo.connectionIdJugadorX = null;
+                GameInfo.connectionIdJugadorO = null;
+            }
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -74,18 +99,16 @@ namespace Servidor3EnRaya.Hubs
                 //el turno también es válido
                 esTurnoValido = true;
             }
-            //si el turno NO es válido
-            if (!esTurnoValido)
-            {
-                //se acaba la función
-                return;
-            }
 
-            //se iguala el turno actual del game info comprobando si el turno actual es X
-            //si ES X entonces se iguala a O y si no lo es se iguala a X
-            GameInfo.turnoActual = GameInfo.turnoActual == "X" ? "O" : "X";
-            //se le pasa el movimiento a todos los clientes
-            await Clients.All.SendAsync("MovimientoRealizado", obj);
+            //si el turno ES válido
+            if (esTurnoValido)
+            {
+                //se iguala el turno actual del game info comprobando si el turno actual es X
+                //si ES X entonces se iguala a O y si no lo es se iguala a X
+                GameInfo.turnoActual = GameInfo.turnoActual == "X" ? "O" : "X";
+                //se le pasa el movimiento a todos los clientes
+                await Clients.All.SendAsync("MovimientoRealizado", obj);
+            }
         }
     }
 }

@@ -1,17 +1,17 @@
 // Tokens únicos para identificar cada dependencia en el contenedor
 export const TYPES = {
-    // URL del hub de SignalR
+    //url del hub
     HubUrl: Symbol.for("HubUrl"),
 
-    // DataSource de juego
+    //datasoruce (api)
     JuegoDataSource: Symbol.for("JuegoDataSource"),
 
-    // Repositorio de juego
+    //repositorio
     IRepositoryJuego: Symbol.for("IRepositoryJuego"),
 
-    // Caso de uso de juego
+    //caso de uso
     UseCaseJuego: Symbol.for("UseCaseJuego"),
 
-    // ViewModel de juego
+    //viewmodel
     VMJuego: Symbol.for("VMJuego"),
 };

@@ -3,8 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal, Platform } from
 import { container } from "../../core/container";
 import { TYPES } from "../../core/types";
 import { VMJuego } from "../../presenter/viewmodels/VMJuego";
+import { useRouter } from "expo-router";
 
 export default function V2Juego() {
+  //constante que sirve para poder usar los métodos de useRouter
+  const router = useRouter();
   //guarda y controla si la partida está "esperando", "jugando" o "finalizado"
   const [estadoPartida, setEstadoPartida] = useState<string>("esperando");
   //sirve para ir cambiando el mensaje que aparece en la interfaz
@@ -93,34 +96,28 @@ export default function V2Juego() {
   };
 
   const validarJugada = (fila: number, columna: number): boolean => {  
-    
-    let validez = true
+    let validez = true;
 
     if (estadoPartida !== "jugando") {
       validez = false;
-    }
-
-    if (esMiTurno === false) {
-      if (Platform.OS == "web") {
-        alert.apply("Espera" + "No es tu turno")
+    } else if (esMiTurno === false) {
+      if (Platform.OS === "web") {
+        alert("No es tu turno");
       } else {
         Alert.alert("Espera", "No es tu turno");
       }
-    
       validez = false;
-    }
-
-    if (tablero[fila][columna] !== "") {
-      if (Platform.OS == "web") {
-        alert("Casilla ocupada" +  "Elige otra casilla")
+    } else if (tablero[fila][columna] !== "") {
+      if (Platform.OS === "web") {
+        alert("Elige otra casilla");
       } else {
         Alert.alert("Casilla ocupada", "Elige otra casilla");
       }
-      
       validez = false;
     }
+
     return validez;
-  };
+  }
 
   //se realiza la jugada usando el viewmodel
   const realizarJugada = async (fila: number, columna: number) => {
@@ -129,13 +126,11 @@ export default function V2Juego() {
 
   //sirve para poder volver a jugar
   const handleJugarDeNuevo = async () => {
-    //se desconecta del servidor
+    // Desconectarse del servidor
     await viewModel.useCase.disconnect();
-
-    //se espera un momento antes de volver a hacer la conexión
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    
+    // Volver a la pantalla inicial
+    router.replace("/views/V1IniciarPartida");
   };
 
   //#region VISTA
@@ -220,24 +215,38 @@ export default function V2Juego() {
     );
   };
 
+  //función que obtiene la información del resultado final
   const obtenerInfoResultado = () => {
-    const esVictoria = mensaje === "¡Has ganado!";
-    const esDerrota = mensaje === "Has perdido";
-    const esEmpate = mensaje === "Empate";
+    //se define un objeto base con valores por defecto
+    const info = {
+      titulo: "RESULTADO",
+      color: "#eee",
+      icono: "🎮"
+    };
 
-    if (esVictoria) {
-      return { titulo: "¡VICTORIA!", color: "#27ae60", icono: "🏆" };
+    //si el mensaje indica victoria, se sobrescriben los valores del objeto
+    if (mensaje === "¡Has ganado!") {
+      info.titulo = "¡VICTORIA!";
+      info.color = "#27ae60";
+      info.icono = "🏆";
     }
 
-    if (esDerrota) {
-      return { titulo: "DERROTA", color: "#e74c3c", icono: "😢" };
+    //si el mensaje indica derrota, se actualiza el objeto con los valores correspondientes
+    else if (mensaje === "Has perdido") {
+      info.titulo = "DERROTA";
+      info.color = "#e74c3c";
+      info.icono = "😢";
     }
 
-    if (esEmpate) {
-      return { titulo: "EMPATE", color: "#f39c12", icono: "🤝" };
+    //si el mensaje indica empate, se actualiza el objeto con los valores del empate
+    else if (mensaje === "Empate") {
+      info.titulo = "EMPATE";
+      info.color = "#f39c12";
+      info.icono = "🤝";
     }
 
-    return { titulo: "RESULTADO", color: "#eee", icono: "🎮" };
+    //se devuelve el objeto final (solo un return)
+    return info;
   };
 
   const renderTableroFinal = () => {
