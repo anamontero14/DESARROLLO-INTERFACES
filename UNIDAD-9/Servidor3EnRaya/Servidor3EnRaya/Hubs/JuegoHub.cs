@@ -11,9 +11,6 @@ namespace Servidor3EnRaya.Hubs
         /// </summary>
         public override async Task OnConnectedAsync()
         {
-            Console.WriteLine("=================================");
-            Console.WriteLine($"JUGADOR CONECTADO: {Context.ConnectionId}");
-
             GameInfo.numJugadores++;
 
             if (GameInfo.numJugadores == 1)
@@ -38,6 +35,26 @@ namespace Servidor3EnRaya.Hubs
         }
 
         /// <summary>
+        /// Se ejecuta cuando un jugador se desconecta
+        /// Resetea el estado del juego para permitir nuevas partidas
+        /// </summary>
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            Console.WriteLine($"Jugador desconectado");
+
+            // Resetear el estado del juego
+            GameInfo.numJugadores = 0;
+            GameInfo.turnoActual = "X";
+            GameInfo.connectionIdJugadorX = null;
+            GameInfo.connectionIdJugadorO = null;
+
+            Console.WriteLine("Estado del juego reseteado");
+            Console.WriteLine("=================================");
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        /// <summary>
         /// Es el método que se ejecuta cuando un jugador hace una jugada
         /// y sirve para poder comunicarse, mandando un objeto de la clase
         /// jugada
@@ -52,13 +69,13 @@ namespace Servidor3EnRaya.Hubs
              * que la jugada dice ser X, 
              * que quien la envía es realmente el jugador X, 
              * y que es el turno de X*/
-            if (obj.simbolo == "X" && Context.ConnectionId == GameInfo.connectionIdJugadorX 
+            if (obj.simbolo == "X" && Context.ConnectionId == GameInfo.connectionIdJugadorX
                 && GameInfo.turnoActual == "X")
             {
                 esTurnoValido = true;
             }
             //comprueba lo mismo solo que para el jugador O
-            else if (obj.simbolo == "O" && Context.ConnectionId == GameInfo.connectionIdJugadorO 
+            else if (obj.simbolo == "O" && Context.ConnectionId == GameInfo.connectionIdJugadorO
                 && GameInfo.turnoActual == "O")
             {
                 esTurnoValido = true;

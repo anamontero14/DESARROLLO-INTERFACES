@@ -74,7 +74,10 @@ export default function V2Juego() {
   };
 
   const validarJugada = (fila: number, columna: number): boolean => {
+    console.log("🔍 validarJugada - estadoPartida:", estadoPartida, "esMiTurno:", esMiTurno);
+    
     if (estadoPartida !== "jugando") {
+      console.log("❌ Bloqueado: estadoPartida no es 'jugando'");
       return false;
     }
 
@@ -88,13 +91,13 @@ export default function V2Juego() {
       return false;
     }
 
+    console.log("✅ Jugada válida");
     return true;
   };
 
   const realizarJugada = async (fila: number, columna: number) => {
     await viewModel.enviarJugada(fila, columna);
-    setEsMiTurno(false);
-    setMensaje("Turno del oponente");
+    // El turno y mensaje se actualizarán cuando llegue MovimientoRealizado
   };
 
   const handleJugarDeNuevo = () => {
