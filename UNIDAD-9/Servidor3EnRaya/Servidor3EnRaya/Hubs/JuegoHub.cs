@@ -6,91 +6,85 @@ namespace Servidor3EnRaya.Hubs
     public class JuegoHub : Hub
     {
         /// <summary>
-        /// Es el método que se ejecuta automáticamente cada vez que 
-        /// se conecta un usuario
+        /// Función que se ejecuta cada vez que un jugador se conecta
         /// </summary>
         public override async Task OnConnectedAsync()
         {
+            //se aumenta el número de jugadores cuando uno se conecta
             GameInfo.numJugadores++;
 
+            //si el numero de jugadores es todavía solo 1
             if (GameInfo.numJugadores == 1)
             {
+                //le asigna aljugador con ese id el simbolo x
                 GameInfo.connectionIdJugadorX = Context.ConnectionId;
-                Console.WriteLine($"Asignado como JUGADOR X");
-                // Enviar símbolo al jugador 1
                 await Clients.Caller.SendAsync("AsignarSimbolo", "X");
             }
+            //si el número de jugadores es 2
             else if (GameInfo.numJugadores == 2)
             {
+                //le asigna a ese id de conexión el símbolo O
                 GameInfo.connectionIdJugadorO = Context.ConnectionId;
-                Console.WriteLine($"Asignado como JUGADOR O");
-                // Enviar símbolo al jugador 2
                 await Clients.Caller.SendAsync("AsignarSimbolo", "O");
-                // Iniciar partida
+                //y comienza la partida
                 await Clients.All.SendAsync("IniciarPartida");
             }
 
-            Console.WriteLine("=================================");
             await base.OnConnectedAsync();
         }
 
         /// <summary>
-        /// Se ejecuta cuando un jugador se desconecta
-        /// Resetea el estado del juego para permitir nuevas partidas
+        /// Función que se ejecuta siempre que alguien se desconecte
         /// </summary>
+        /// <param name="exception"></param>
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            Console.WriteLine($"Jugador desconectado");
-
-            // Resetear el estado del juego
+            //resetea todos los valores para que se le obligue a los jugadores
+            //a conectarse de nuevo
             GameInfo.numJugadores = 0;
             GameInfo.turnoActual = "X";
             GameInfo.connectionIdJugadorX = null;
             GameInfo.connectionIdJugadorO = null;
 
-            Console.WriteLine("Estado del juego reseteado");
-            Console.WriteLine("=================================");
-
             await base.OnDisconnectedAsync(exception);
         }
 
         /// <summary>
-        /// Es el método que se ejecuta cuando un jugador hace una jugada
-        /// y sirve para poder comunicarse, mandando un objeto de la clase
-        /// jugada
+        /// Función que se ejecuta cada vez que se mande un movimiento
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">Objeto de tipo Jugada que lleva todos los datos
+        /// sobre la jugada que se acaba de hacer</param>
         public async Task MandarMovimiento(Jugada obj)
         {
-            //variable para verificar si el jugador puede hacer este movimiento
+            //variable auxiliar para comprobar si el turno es válido o no
             bool esTurnoValido = false;
-            /*if que comprueba que: 
-             * que la jugada dice ser X, 
-             * que quien la envía es realmente el jugador X, 
-             * y que es el turno de X*/
+            //si el símbolo de la jugada es X y el id de conexión del contexto es igual al
+            //id de conexión que está almacenado en el game info y si el turno actual del
+            //game info es del jugador x
             if (obj.simbolo == "X" && Context.ConnectionId == GameInfo.connectionIdJugadorX
                 && GameInfo.turnoActual == "X")
             {
+                //el turno es válido
                 esTurnoValido = true;
             }
-            //comprueba lo mismo solo que para el jugador O
+            //si es lo mismo pero con el jugador 2
             else if (obj.simbolo == "O" && Context.ConnectionId == GameInfo.connectionIdJugadorO
                 && GameInfo.turnoActual == "O")
             {
+                //el turno también es válido
                 esTurnoValido = true;
             }
-
-            //si el turno no es válido no hace nada
+            //si el turno NO es válido
             if (!esTurnoValido)
             {
+                //se acaba la función
                 return;
             }
 
-            //sirve para cambiar el turno al siguiente jugador
+            //se iguala el turno actual del game info comprobando si el turno actual es X
+            //si ES X entonces se iguala a O y si no lo es se iguala a X
             GameInfo.turnoActual = GameInfo.turnoActual == "X" ? "O" : "X";
-
-            //envian los movimientos a todos los jugadores
+            //se le pasa el movimiento a todos los clientes
             await Clients.All.SendAsync("MovimientoRealizado", obj);
         }
     }

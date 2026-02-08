@@ -2,13 +2,18 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
+//vista 1 en la que solo hay un botón para iniciar la partida
 export default function V1IniciarPartida() {
+  //se crea una constante de router para poder hacer uso de la navegación
   const router = useRouter();
 
+  //esta es la función que se va a ejecutar cuando 
+  //el jugador quiera iniciar la partida
   const handleIniciarPartida = () => {
     router.push("/views/V2Juego");
   };
 
+  //#region VISTA
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Tres en Raya</Text>
@@ -19,8 +24,10 @@ export default function V1IniciarPartida() {
       </TouchableOpacity>
     </View>
   );
+  //#endregion
 }
 
+//#region ESTILOS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -57,3 +64,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+//#endregion

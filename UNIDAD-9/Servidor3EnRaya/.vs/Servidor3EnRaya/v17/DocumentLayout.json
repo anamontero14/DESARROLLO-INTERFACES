@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|solutionrelative:servidor3enraya\\hubs\\juegohub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\servidor3enraya\\servidor3enraya\\entities\\gameinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|solutionrelative:servidor3enraya\\entities\\gameinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\servidor3enraya\\servidor3enraya\\entities\\jugada.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|solutionrelative:servidor3enraya\\entities\\jugada.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|c:\\users\\usuario\\documents\\github\\desarrollo-interfaces\\unidad-9\\servidor3enraya\\servidor3enraya\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6EC501EB-6F39-44F5-AC44-D70D60DC4C4F}|Servidor3EnRaya\\Servidor3EnRaya.csproj|solutionrelative:servidor3enraya\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,8 +26,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Jugada.cs",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Entities\\Jugada.cs",
+              "RelativeDocumentMoniker": "Servidor3EnRaya\\Entities\\Jugada.cs",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Entities\\Jugada.cs",
+              "RelativeToolTip": "Servidor3EnRaya\\Entities\\Jugada.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-08T12:05:00.351Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GameInfo.cs",
+              "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Entities\\GameInfo.cs",
+              "RelativeDocumentMoniker": "Servidor3EnRaya\\Entities\\GameInfo.cs",
+              "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Entities\\GameInfo.cs",
+              "RelativeToolTip": "Servidor3EnRaya\\Entities\\GameInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-08T12:04:12.316Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,14 +60,14 @@
               "RelativeDocumentMoniker": "Servidor3EnRaya\\Hubs\\JuegoHub.cs",
               "ToolTip": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Hubs\\JuegoHub.cs",
               "RelativeToolTip": "Servidor3EnRaya\\Hubs\\JuegoHub.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAwwGAAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADgAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T09:30:58.624Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\USUARIO\\Documents\\GitHub\\DESARROLLO-INTERFACES\\UNIDAD-9\\Servidor3EnRaya\\Servidor3EnRaya\\Program.cs",
               "RelativeDocumentMoniker": "Servidor3EnRaya\\Program.cs",

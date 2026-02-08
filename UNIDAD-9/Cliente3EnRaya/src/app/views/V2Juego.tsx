@@ -1,37 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal } from "react-native";
-import { useRouter } from "expo-router";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal, Platform } from "react-native";
 import { container } from "../../core/container";
 import { TYPES } from "../../core/types";
 import { VMJuego } from "../../presenter/viewmodels/VMJuego";
 
 export default function V2Juego() {
-  const router = useRouter();
-  
+  //guarda y controla si la partida está "esperando", "jugando" o "finalizado"
   const [estadoPartida, setEstadoPartida] = useState<string>("esperando");
+  //sirve para ir cambiando el mensaje que aparece en la interfaz
   const [mensaje, setMensaje] = useState<string>("Esperando oponente...");
+  //guarda el estado del tablero del juego
   const [tablero, setTablero] = useState<string[][]>([
     ["", "", ""],
     ["", "", ""],
     ["", "", ""]
   ]);
+  //va actualizando el turno actual
   const [esMiTurno, setEsMiTurno] = useState<boolean>(false);
-
+  //crea un estado con el viewmodel y solo se ejecuta una vez al montar el
+  //componente
   const [viewModel] = useState(() => {
+    //obtiene una instancia de VMJuego del contenedor de dependencias
     const vm = container.get<VMJuego>(TYPES.VMJuego);
+    //se le pasa al viewmodel los setters para poder ir actualizando
+    //la vista con los cambios que ofrezca el viewmodel
     vm.configure(setEstadoPartida, setMensaje, setTablero, setEsMiTurno);
+    //guarda el viewmodel dentro del estado
     return vm;
   });
 
+  /**
+   * después de que el componente se monte ejecuta
+   * initializeGame() y setupEventListeners()
+   * como el segundo parámetro es un array vacío
+   * esto solo ocurre una vez al inicio
+   */
   useEffect(() => {
     initializeGame();
     setupEventListeners();
   }, []);
 
+  //se encarga de iniciar la partida
   const initializeGame = () => {
+    //llama al método initialize del viewmodel
     viewModel.initialize().catch((error) => {
+      //si ocurre un error manda el siguiente código para hacerselo
+      //saber al usuario
       console.log("Error de conexión:", error);
-      Alert.alert("Error", "No se pudo conectar con el servidor");
+      //se comprueba en qué plataforma está para mandarle un mensaje u otro
+      if (Platform.OS == "web") {
+        alert("Error" + "No se pudo conectar con el servidor")
+      } else {
+        Alert.alert("Error", "No se pudo conectar con el servidor");
+      }
     });
   };
 
@@ -46,13 +67,11 @@ export default function V2Juego() {
   };
 
   const handleAsignarSimbolo = (simbolo: string) => {
-    console.log("🎯 Símbolo asignado:", simbolo);
     viewModel.miSimbolo = simbolo;
     setMensaje(`Esperando oponente... Eres ${simbolo}`);
   };
 
   const handleIniciarPartida = () => {
-    console.log("🎮 Partida iniciada!");
     setEstadoPartida("jugando");
     
     const esJugadorX = viewModel.miSimbolo === "X";
@@ -73,37 +92,53 @@ export default function V2Juego() {
     }
   };
 
-  const validarJugada = (fila: number, columna: number): boolean => {
-    console.log("🔍 validarJugada - estadoPartida:", estadoPartida, "esMiTurno:", esMiTurno);
+  const validarJugada = (fila: number, columna: number): boolean => {  
     
+    let validez = true
+
     if (estadoPartida !== "jugando") {
-      console.log("❌ Bloqueado: estadoPartida no es 'jugando'");
-      return false;
+      validez = false;
     }
 
     if (esMiTurno === false) {
-      Alert.alert("Espera", "No es tu turno");
-      return false;
+      if (Platform.OS == "web") {
+        alert.apply("Espera" + "No es tu turno")
+      } else {
+        Alert.alert("Espera", "No es tu turno");
+      }
+    
+      validez = false;
     }
 
     if (tablero[fila][columna] !== "") {
-      Alert.alert("Casilla ocupada", "Elige otra casilla");
-      return false;
+      if (Platform.OS == "web") {
+        alert("Casilla ocupada" +  "Elige otra casilla")
+      } else {
+        Alert.alert("Casilla ocupada", "Elige otra casilla");
+      }
+      
+      validez = false;
     }
-
-    console.log("✅ Jugada válida");
-    return true;
+    return validez;
   };
 
+  //se realiza la jugada usando el viewmodel
   const realizarJugada = async (fila: number, columna: number) => {
     await viewModel.enviarJugada(fila, columna);
-    // El turno y mensaje se actualizarán cuando llegue MovimientoRealizado
   };
 
-  const handleJugarDeNuevo = () => {
-    router.replace("/views/V1IniciarPartida");
+  //sirve para poder volver a jugar
+  const handleJugarDeNuevo = async () => {
+    //se desconecta del servidor
+    await viewModel.useCase.disconnect();
+
+    //se espera un momento antes de volver a hacer la conexión
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
+  //#region VISTA
   const renderCasilla = (fila: number, columna: number) => {
     const valor = tablero[fila][columna];
     const colorTexto = obtenerColorTexto(valor);
@@ -249,7 +284,7 @@ export default function V2Juego() {
     </View>
   );
 }
-
+  //#endregion
 const styles = StyleSheet.create({
   container: {
     flex: 1,
