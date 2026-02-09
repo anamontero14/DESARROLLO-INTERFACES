@@ -18,7 +18,7 @@ const container = new Container();
 
 //url del hub
 container.bind<string>(TYPES.HubUrl).toConstantValue(
-    "http://localhost:5236/juegoHub"
+    "https://servidor3enraya-ecepgbe2a0amgqgf.francecentral-01.azurewebsites.net/juegoHub"
 );
 
 //datasource se pone como singleton

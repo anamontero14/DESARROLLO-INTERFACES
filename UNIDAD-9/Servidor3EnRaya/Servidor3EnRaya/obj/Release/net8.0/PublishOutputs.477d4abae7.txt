@@ -1,0 +1,8 @@
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\Servidor3EnRaya.exe
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\appsettings.json
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\libman.json
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\Servidor3EnRaya.dll
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\Servidor3EnRaya.deps.json
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\Servidor3EnRaya.runtimeconfig.json
+C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\obj\Release\net8.0\PubTmp\Out\Servidor3EnRaya.pdb
