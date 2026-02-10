@@ -9,41 +9,41 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Servidor3EnRaya
 build_property.RootNamespace = Servidor3EnRaya
-build_property.ProjectDir = C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\
+build_property.ProjectDir = C:\Users\ana.montero\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\USUARIO\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya
+build_property.MSBuildProjectDirectory = C:\Users\ana.montero\Documents\GitHub\DESARROLLO-INTERFACES\UNIDAD-9\Servidor3EnRaya\Servidor3EnRaya
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Error.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Index.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Privacy.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/_ViewImports.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/_ViewStart.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/USUARIO/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Shared/_Layout.cshtml]
+[C:/Users/ana.montero/Documents/GitHub/DESARROLLO-INTERFACES/UNIDAD-9/Servidor3EnRaya/Servidor3EnRaya/Pages/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-hqjf5hl1ab

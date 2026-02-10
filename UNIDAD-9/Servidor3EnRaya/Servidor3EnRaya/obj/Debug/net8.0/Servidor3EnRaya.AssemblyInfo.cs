@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Servidor3EnRaya")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e697f4077808f6219186fbc439284e4c86372f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbeaebd174117f8693c6e7453be24caa2c26ef66")]
 [assembly: System.Reflection.AssemblyProductAttribute("Servidor3EnRaya")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Servidor3EnRaya")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
